@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Operating the MRF Subscriber</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+      <section name="Operation">
+
+         <p>The MRF Subscriber software package functions as a ZooKeeper Client. As a result, please
+            ensure that a ZooKeeper instance is running at the configured location.</p>
+
+         <ul>
+            <li><a href="#Running_the_Package">Running the Package</a></li>
+         </ul>
+
+      </section>
+      <section name="Running the Package">
+
+         <p>To run the program, simply execute the script located under 'bin'.</p>
+         <source>
+% ./mrfsubscriber -p NAME_OF_SOURCE_PRODUCT_TYPE
+         </source>
+         <p>Or supply a list of product type names delimited by a comma.</p>
+         <source>
+% ./mrfsubscriber -p PT1,PT2,PT3
+         </source>
+         <p>To specify a specific target type, use the -t flag.</p>
+         <source>
+% ./mrfsubscriber -p PT1,PT2,PT3
+         </source>
+         <p>Assuming all configurations were set in the config file, the daemon should start. Append
+            the command with '&amp;' to force it into the background.</p>
+
+         <p>If the config file is not used, the following values can be specified via command
+            line.</p>
+         <ul>
+            <li>-p : Name of the source product type to subscribe to.</li>
+            <li>-c : Config file full path. Only to be used if the relative path configuration file
+               is missing or relocated.</li>
+            <li>-t : Target to use in the configuration file. If not specified, default is used.</li>
+            <li>-l : Flag to enable link mode. This mode uses the link_config.xml configuration file instead.</li>
+            <li>-s : The start time for the crawler to use. Enables batch mode. Format: yyyy-MM-dd'T'HH:mm:ss.SSS</li>
+            <li>-e : The end time for the crawler to use. Enables batch mode. Format: yyyy-MM-dd'T'HH:mm:ss.SSS</li>
+         </ul>
+
+      </section>
+
+   </body>
+
+</document>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+   <properties>
+      <title>About SIPS Common API</title>
+      <author>T. Huang</author>
+   </properties>
+   <body>
+      <!-- Copyright 2014, by the California Institute of Technology. -->
+      <!-- ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. -->
+      <!--  -->
+      <!-- $Id: $ -->
+      <section name="About SIPS Common API">
+         <p>The SIPS Common API module contains an application programming interface SIPS' data
+            handler.</p>
+      </section>
+      <section name="PDRSlurper Example">
+         <p>A SIPS' PDR file is a nested keyword=value text file. where elements/keywords can be
+            grouped by OBJECT...END_OBJECT blocks</p>
+         <p>Example PDR file: MODAPSops8.6067375.PDR</p>
+         <source>
+ORIGINATING_SYSTEM = MODAPS_TERRA_FPROC;
+TOTAL_FILE_COUNT = 1;
+EXPIRATION_TIME = 2013-12-27T15:35:37;
+OBJECT=FILE_GROUP;
+   DATA_TYPE = MYG04_LTD_ODLO;
+   DATA_VERSION = 1;
+   NODE_NAME = modpdr01;
+   OBJECT = FILE_SPEC;
+      DIRECTORY_ID = /MODOPS/MODAPS/GIBS/AQUA/FPROC/DATA;
+      FILE_ID = MYG04_LTD_ODLO.A2013343.global.006.2013353122801.tar.gz;
+      FILE_TYPE = HDF;
+      FILE_SIZE = 348921;
+      FILE_CKSUM_TYPE = CKSUM;
+      FILE_CKSUM_VALUE = 20772906;
+   END_OBJECT = FILE_SPEC;
+END_OBJECT = FILE_GROUP;            
+         </source>
+         <p>The PDRSlurper first converts PDR data into wellformed XML document. Groovy/Java already
+            comes with starndard XML parser. The conversion to XML enables program to take advantage
+            of existing parsers</p>
+         <img src="images/pdr_schema.jpg" alt="" height="480"/>
+         <p>Example using PDRSlurper in Groovy to print </p>
+         <source>
+def pdr = new PdrSlurper().parseText(new File('MODAPSops8.6067375.PDR').text)
+println pdr.ORIGINATING_SYSTEM
+pdr.OBJECT.each {
+   println it.DATA_TYPE
+}            
+         </source>
+      </section>
+      <section name="METSlurper Example">
+         <p>A .met file is a metadata file associates with a global imagery file.  It is an ODL-like file is a nested keyword=value text file. where elements/keywords can be
+            grouped by GROUP... OBJECT...END_OBJECT ...END_GROUP blocks</p>
+         <p>Example PDR file: MYG04_LTD_ODLO.A2013342.global.006.2013353122813.met</p>
+         <source>
+GROUP = INVENTORYMETADATA
+GROUPTYPE = MASTERGROUP
+   GROUP = ECSDATAGRANULE
+      OBJECT = LOCALGRANULEID
+         NUM_VAL = 1
+         VALUE   = MYG04_LTD_ODLO.A2013342.global.006.2013353122813
+      END_OBJECT = LOCALGRANULEID
+
+      OBJECT = DAYNIGHTFLAG
+         NUM_VAL = 1
+         VALUE   = DAY
+      END_OBJECT = DAYNIGHTFLAG
+
+      OBJECT = PRODUCTIONDATETIME
+         NUM_VAL = 1
+         VALUE   = 2013-12-19T12:28:13.000Z
+      END_OBJECT = PRODUCTIONDATETIME
+   END_GROUP = ECSDATAGRANULE
+
+   GROUP = PGEVERSIONCLASS
+      OBJECT = PGEVERSION
+         NUM_VAL = 1
+         VALUE   = 6.0.0
+      END_OBJECT = PGEVERSION
+   END_GROUP = PGEVERSIONCLASS
+   ...
+END_GROUP = INVENTORYMETADATA
+         </source>
+         <p>The METSlurper first converts MET data into wellformed XML document. Groovy/Java already
+            comes with starndard XML parser. The conversion to XML enables program to take advantage
+            of existing parsers</p>
+         <img src="images/met_schema.jpg" alt="" width="480"/>
+         <p>Example using METSlurper in Groovy to print </p>
+         <source>
+def met = new MetSlurper().parseText(new File('MYG04_LTD_ODLO.A2013342.global.006.2013353122813.met').text)
+def inv = met.GROUP.find {it.GROUP_NAME == 'INVENTORYMETADATA'}
+def loc = inv.OBJECT.find {it.OBJECT_NAME == 'LOCALGRANULEID'}
+println loc.VALUE
+         </source>
+      </section>
+   </body>
+</document>

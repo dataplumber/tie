@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>About MRF Product Generator</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="About">
+         <p>The MRF Generation Engine is a Zookeeper client program that is responsible for the ZK
+            querying, generation, and submission of MRF Products.</p>
+      </section>
+
+   </body>
+
+</document>

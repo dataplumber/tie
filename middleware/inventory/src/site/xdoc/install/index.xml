@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Installation of the Inventory WS</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="Installation">
+
+         <!-- Within sections, any XHTML can be used -->
+         <p>This document describes how to install and configure the Manager web application. The
+            following sections can be found in this document:</p>
+
+         <ul>
+            <li><a href="#Configuration">Configuration</a></li>
+            <li><a href="#Build_Instructions">Build Instructions</a></li>
+            <li><a href="#Running_the_Application">Running the Application</a></li>
+         </ul>
+
+      </section>
+
+      <section name="Configuration">
+
+         <p>Inventory WS is a web application that is designed and built with the <a
+               href="http://groovy.codehaus.org/">Groovy</a> programming language and the <a
+               href="http://www.grails.org">Grails</a> web application framework. While both these
+            technologies are fully developed on top of <a href="http://java.sun.com/">Java</a>
+            platform, its support from <a href="http://maven.apache.org/">Maven</a> is still a
+            little behind. The prerequisite for building the Inventory web application is the Grails
+            web framework must be installed. Below is the source tree of Manager distribution </p>
+
+         <subsection name="Config.groovy">
+            <p> Application specific configuration can be found under the
+               'grails-app/conf/Config.groovy' file. This configuration is necessary for the
+               Inventory WS application to be able to publish to sigevent. </p>
+            <source>
+environments {
+   development {
+      horizon_sigevent_url = "http://localhost:8100/sigevent"
+   }
+
+   test {
+      horizon_sigevent_url = "http://dit1:8100/sigevent"
+   }
+
+   ...
+}
+         </source>
+
+            <p> It also contains constants values and a translation for the phrases "Product Type"
+               and "Product"</p>
+
+            <source>
+constants {
+   domainLabel {
+      PRODUCT_TYPE = "ImagerySet"
+      PRODUCT = "Imagery"
+   }
+   appendType {
+      YEAR_DOY = "YEAR-DOY"
+      YEAR_MONTH_DAY = "YEAR-MONTH-DAY"
+      YEAR = "YEAR"
+      YEAR_FLAT = "YEAR-FLAT"
+      BATCH = "BATCH"
+      YEAR_WEEK = "YEAR-WEEK"
+      YEAR_MONTH = "YEAR-MONTH"
+      
+      
+      ...
+   }
+}
+         </source>
+            <p>Log4J configuration is set under this file as well. Please refer to the Grails <a
+                  href="http://grails.org/doc/latest/guide/conf.html#logging">documentation</a> on
+               how to customize the logging.</p>
+            <source>
+
+// log4j configuration
+log4j = {
+   appenders {
+      console name: 'stdoutLogger',
+            layout: pattern(
+                  conversionPattern: '%d{ABSOLUTE} %-5p [%c{1}:%L] {%t} %m%n')
+
+      appender new org.apache.log4j.DailyRollingFileAppender(
+            name: 'fileLogger',
+            fileName: 'inventory.log',
+            layout: pattern(
+                  conversionPattern: '%d %-5p [%c{1}:%L] {%t} %m%n'),
+            datePattern: "'.'yyyy-MM-dd"
+      )
+
+      appender new org.apache.log4j.DailyRollingFileAppender(
+            name: 'stackTraceLogger',
+            fileName: 'inventory.stacktrace',
+            layout: pattern(
+                  conversionPattern: '%d %-5p [%c{1}:%L] {%t} %m%n'),
+            datePattern: "'.'yyyy-MM-dd"
+      )
+   }
+
+   root {
+      error 'stdoutLogger', 'fileLogger'
+      ...
+         </source>
+         </subsection>
+         <subsection name="DataSource.groovy">
+            <p>The Data Source configuration information is located in the
+               "grails-app/conf/DataSource.groovy" file. The configuration is necessary for the
+               Inventory web application to connect to its data catalog, which is the operation
+               registry for this web application.</p>
+            <source>
+environments {
+   development {
+      dataSource {
+         dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+         driverClassName = "org.postgresql.Driver"
+         dialect = "org.hibernate.dialect.PostgreSQLDialect"
+         url = "jdbc:postgresql://localhost:5432/gibs"
+         username = "username"
+         password = "password"
+      }
+   }
+   test {
+      dataSource {
+         dbCreate = "create" // one of 'create', 'create-drop', 'update', 'validate', ''
+         driverClassName = "org.postgresql.Driver"
+         dialect = "org.hibernate.dialect.PostgreSQLDialect"
+         url = "jdbc:postgresql://sit1:5432/gibs"
+         username = "username"
+         password = "password"
+      }
+   }
+   ...
+         </source>
+         </subsection>
+      </section>
+      <section name="Build Instructions">
+         <p>Prior to building, the <b>"common-api"</b> program set must be built and installed into
+            the local maven repository. If an up to date common-api jar can be found on an external
+            repository, that may be used as well.</p>
+         <p>The GRAILS_HOME and PATH environment variable must be set in order for the grails
+            application to launch correctly.</p>
+         <source>
+% export GRAILS_HOME=/usr/local/grails
+% export PATH=$PATH:$GRAILS_HOME/bin
+      </source>
+
+         <p>Next, the necessary dependencies have to be copies into the "lib" directory for grails
+            to auto-add to its classpath. We use maven as a dependency resolver. Once maven has
+            copied the dependencies to the target/dependency directory, copy all contents to the lib
+            directory.</p>
+         <source>
+% mvn dependency:copy-dependencies
+% cp target/dependency/* lib
+      </source>
+      </section>
+      <section name="Running the Application">
+         <p>The application runs as a grails self contained application with a built in web server.
+            Alternatively, Inventory can be packaged as a WAR file to be deployed to one of many
+            great java containers such as JBOSS. For our purposes, we will assume the application is
+            being deployed with what grails provides.</p>
+         <p>To start the Inventory web service application:</p>
+         <source>
+% grails -Dgrails.env=GRAILS_ENV -Dserver.port.http=SERVER_PORT run-app
+      </source>
+         <p> The command above will run the Inventory WS as Grails application. GRAILS_ENV should be
+            replaced with "test" for testing, and "production" for ops. It could alternatively be
+            omitted entirely, defaulting to the "development" env. SERVER_PORT should be replaced
+            with a port number that sigevent should listen to. Note that it is necessary to open the
+            SERVER_PORT to outside in order to allow all clients to access to inventory. When grails
+            app starts up, it automatically installs the plugins needed. </p>
+      </section>
+   </body>
+
+</document>

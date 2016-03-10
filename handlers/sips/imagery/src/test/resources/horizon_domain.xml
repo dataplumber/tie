@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<domain xmlns="http://horizon.jpl.nasa.gov">
+   <default>tieDev</default>
+   <federation>
+      <name>tieDev</name>
+      <url>http://horizon.jpl.nasa.gov:8080/manager-0.4.0/ingest</url>
+      <productType>SIPS_PDR</productType>
+   </federation>
+   <sigevent>http://horizon.jpl.nasa.gov:8080/sigevent-5.0.0e</sigevent>
+   <jobkeeper>
+      <server>horizon.jpl.nasa.gov:2181</server>
+      <webservice>horizon.jpl.nasa.gov:9998</webservice>
+   </jobkeeper>
+   <discovery>http://horizon.jpl.nasa.gov:8983/solr.war</discovery>
+   <inventory>http://dmeas.jpl.nasa.gov:9191</inventory>
+</domain>

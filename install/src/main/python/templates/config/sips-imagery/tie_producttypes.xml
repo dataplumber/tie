@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handler>
+   <productTypes>
+      <sigevent>http://localhost:8100/sigevent/</sigevent>
+      <interval>60</interval>
+      <productType>
+         <name>MYG09_LQD_121_SRC</name>
+         <sourceURL>file:///Users/calarcon/sips_test/staging/data/</sourceURL>
+         <fileSet minOccurs="3">
+            <expression>.*\.(png|pgw|met)</expression>
+         </fileSet>
+      </productType>
+      <productType>
+         <name>SMAP_L3BTHP_EG_QA;
+      <productType>
+         <name>SMAP_L3BTVP_EG_QA;
+      <productType>
+         <name>SMAP_L3FTPM_EN;
+      <productType>
+         <name>SMAP_L3SIG0HH_EG_QA;
+      <productType>
+         <name>SMAP_L3SIG0XPOL_EG;
+      <productType>
+         <name>SMAP_L3SMAP_EG_QA;
+      <productType>
+         <name>SMAP_L3BTHAP_EG;
+      <productType>
+         <name>SMAP_L3BTVAP_EG;
+      <productType>
+         <name>SMAP_L3FTAM_EN;
+      <productType>
+         <name>SMAP_L3FTPM_EN_QA;
+      <productType>
+         <name>SMAP_L3SIG0VV_EG;
+      <productType>
+         <name>SMAP_L3SIG0XPOL_EG_QA;
+      <productType>
+         <name>SMAP_L3SMA_EG;
+      <productType>
+         <name>SMAP_L3BTHAP_EG_QA;
+      <productType>
+         <name>SMAP_L3BTVAP_EG_QA;
+      <productType>
+         <name>SMAP_L3FTAM_EN_QA;
+      <productType>
+         <name>SMAP_L3SIG0HH_EG;
+      <productType>
+         <name>SMAP_L3SIG0VV_EG_QA;
+      <productType>
+         <name>SMAP_L3SMAP_EG;
+      <productType>
+         <name>SMAP_L3SMP_EG_QA;
+
+   </productTypes>
+</handler>

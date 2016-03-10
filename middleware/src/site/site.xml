@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+Copyright 2013, by the California Institute of Technology.
+ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+
+$Id: $
+-->
+
+<project xmlns="http://maven.apache.org/DECORATION/1.4.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd"
+   name="Middleware Program Set">
+
+   <bannerLeft>
+      <src>images/gibs_logo.jpg</src>
+      <href>https://horizon.jpl.nasa.gov/tie/</href>
+   </bannerLeft>
+
+   <bannerRight>
+      <name>Data Handlers Program Set</name>
+   </bannerRight>
+
+   <body>
+      <links>
+         <item name="Middleware" href="http://horizon.jpl.nasa.gov/tie/middleware/index.html"/>
+      </links>
+      <menu name="Software Documentation">
+         <item name="About Middleware" href="index.html"/>
+         <item name="Release Description" href="release/index.html"/>
+      </menu>
+
+      <menu ref="modules"/>
+      <menu ref="reports"/>
+   </body>
+</project>

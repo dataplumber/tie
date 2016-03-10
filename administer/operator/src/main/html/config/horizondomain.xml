@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain xmlns='http://earthdata.nasa.gov'>
+  <default>GIBS</default>
+  <federation>
+    <name>GIBS</name>
+    <url>http://dmas:8080/manager/ingest</url>
+  </federation>
+  <sigevent>http://dmas:8100/sigevent</sigevent>
+  <jobkeeper>
+    <server>dmas:2181</server>
+    <webservice>dmas:9998</webservice>
+  </jobkeeper>
+  <inventory>http://dmas:9192</inventory>
+  <security>http://dmas:9196</security>
+</domain>

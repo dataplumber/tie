@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>About TIE Operator Tool</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="About TIE Operator Tool">
+         <p>The TIE Operator Tool was designed as an interface for the Manager program set. It acts
+            as a front end for various TIE-operation related tasks such as granule management and
+            storage management. This application uses a combination of JQuery and CSS3 for visual
+            effect and appearances.</p>
+      </section>
+
+   </body>
+
+</document>

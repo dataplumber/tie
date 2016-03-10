@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2013, by the California Institute of Technology. -->
+<!-- ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. -->
+<!--  -->
+<!-- $Id: $ -->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Install Program Set Installation Guide</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="Installation">
+
+         <!-- Within sections, any XHTML can be used -->
+         <p>This document describes how to install and configure the Install program set. The following sections can be found in this document:</p>
+         <ul>
+            <li><a href="#Distribution_Contents">Distribution Contents</a></li>
+            <li><a href="#Configuration">Configuration</a></li>
+         </ul>
+
+      </section>
+
+      <section name="Distribution Contents" id="Distribution_Contents">
+         <p>The program set is packaged python script with some included modules. The package does not need to be installed and can be run as is.</p>
+         <p>Below is an illustration of the distribution after it has been extracted:</p>
+         <img src="../images/archive_dist.jpl" alt="Install distribution contents"/>
+         <p>The contents of the package are as follows:</p>
+         <ul>
+            <li>package - Directory containing the python code responsible for the installation.</li>
+            <li>config - Directory containing the configuration files.
+               <ul>
+                  <li>horizoninstall.conf - Configuration file containing properties used by Install Program Set.</li>
+               </ul>
+            </li>
+            <li>templates - Directory containing the configuration files to be replaced per program set.</li>
+         </ul>
+      </section>
+      <section name="Configuration">
+         <p>The configuration file consists of the following sections:</p>
+         <ul>
+            <li>Global</li>
+            <li>Default</li>
+            <li>[package-name]</li>
+         </ul>
+         <subsection name="Global">
+            <p>This section represents all the properties the application needs to begin processing packages. It contains paths and flags that govern the script's behavior.</p>
+            <ul>
+               <li>tmpPath - The path to temporary space. This directory will be created if it does not exist.</li>
+               <li>templatPath - The relative path from the top level of the script to the templates to be used when configuring.</li>
+               <li>useDefault - A flag that specifies whether to use the "Default" section if no section is matched to a package.</li>
+               <li>overwriteFlag - A flag that specifies whether to blindly overwrite existing files, or warn the user.</li>
+               <li>defaultLogPath - The path to replace instances of "HORIZON_LOGGING" in the launch scripts.</li>
+               <li>horizonRepoPath - Path to the horizon repo (if any).</li>
+               <li>tieRepoPath - Path to the tie repo (if any)</li>
+               <li>manualTarPath - Path to the manually managed tar balls.</li>
+            </ul>
+         </subsection>
+         <subsection name="Default">
+            <p>This section represents both a fall back configuration (if useDefault is true) as well as a template configuration to use for new sections.</p>
+            <ul>
+               <li>hasTopLevel - Does this package have a top level container after it is unzipped?</li>
+               <li>mavenTree - Which of the two trees this section belongs to. Only used when ran in maven tree mode.</li>
+               <li>mavenPath - Path to the target directory where the tarball will reside. Relative to top of maven tree.</li>
+               <li>configPath - The relative path to the config directory of the package after the top level container.</li>
+               <li>configDest - The destination for the configuration files. This includes both the included configuration files and the overwritten templates.</li>
+               <li>binPath - The relative path to the bin directory of the package after the top level container.</li>
+               <li>binDest - The destination for the bin files. </li>
+               <li>libPath - The relative path to the lib directory of the package after the top level container.</li>
+               <li>libDest - The destination for the lib files.</li>
+               <li>filePath[#] - The manual path to a file inside the tar ball that may not have been covered with the configuration above. The [#] should match for [#] of the fileDest.</li>
+               <li>fileDest[#] - Path to the manually configured file.</li>
+            </ul>
+         </subsection>
+         <subsection name="[package-name]">
+            <p>This section is to be created whenever a new subsystem is added to the installation program. Replace [package-name] with the name of the subsystem. This will be used toidentify the package if no identification code is provided.</p>
+            <p>Be sure to use the same fields as mentioned in the "Default" section above.</p>
+         </subsection>
+      </section>
+   </body>
+
+</document>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>About MRF Subscriber</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="About MRF Subscriber">
+         <p>The MRF Subscriber is an Inventory WS and ZooKeeper client that is in charge of
+            publishing jobs on a distributed ZK queue. The MRF Subscriber periodically polls the TIE
+            Inventory Web Service for any new Imagery product of a given Imagery Set. The subscriber
+            can also subscribe to multiple Imagery Sets.</p>
+      </section>
+
+   </body>
+
+</document>

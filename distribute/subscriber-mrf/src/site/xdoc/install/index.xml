@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Installation of the MRF Subscriber</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="Installation">
+
+         <!-- Within sections, any XHTML can be used -->
+         <p>This document describes how to install and configure the MRF Subscriber application. The
+            following sections can be found in this document:</p>
+
+         <ul>
+            <li><a href="#Distribution_Content">Distribution Content</a></li>
+            <li><a href="#Configuration">Configuration</a></li>
+         </ul>
+
+      </section>
+
+      <section name="Distribution Content">
+
+         <p>The program set is packaged in a self-contained TAR/GZIP file located in the target
+            directory after packaging is complete. The package can be extracted with the following
+            command (where X.X.X is the current version):</p>
+         <source>
+% mvn package
+% tar -xzvf target/mrf-subscriber-X.X.X-distribute-subscriber.tar.gz
+         </source>
+         <p>Below is an illustration of the distribution after it has been extracted:</p>
+         <p><img alt="MRF Subscriber Directory Structure" src="../images/distribute-dir.jpg"/></p>
+         <p>The contents of the package are as follows:</p>
+         <ul>
+            <li>bin - Data directory containing the executable to star the product subscriber
+               service.</li>
+            <li>lib - Directory containing java program's run-time libraries.</li>
+            <li>conf - Directory containing multiple configuration files.</li>
+         </ul>
+      </section>
+
+      <section name="Configuration">
+         <p>The following configurations can be modified depending on user needs:</p>
+
+         <subsection name="distribute.config">
+            <source>
+distribute.mrf.output.path=/usr/local/tie_data/handler
+distribute.mrf.extrafiles.path=/usr/local/tie_data/mrfgen
+
+distribute.sleep.seconds=10
+
+# Cache path defaults if left empty to {user.home}/.horizon/subscriber-cache
+distribute.cache.path=
+
+distribute.subscriber.class=gov.nasa.gibs.distribute.subscriber.plugins.IWSSubscriber
+
+sigevent.url=http://localhost:8100/sigevent
+inventory.url=http://localhost:9192
+zookeeper.url=localhost:2181
+            </source>
+            <p>The following values can be set in the distribute.config file.</p>
+            <ul>
+               <li>distribute.cache.path: The path to hold the cache files used to determine the
+                  latest archived date processed per product type.</li>
+               <li>distribute.mrf.output.path: The top level path where the ingest client or MRF
+                  Handler will pick up the output files.</li>
+               <li>distribute.mrf.extrafiles.path: The top level path to place all extra mrfgen generated files (ie logs).</li>
+               <li>distribute.sleep.seconds: The amount of time (in seconds) between when the
+                  subscriber will poll the Inventory service.</li>
+               <li>distribute.subscriber.class: The internal class to use when polling the Inventory
+                  service (Do not modify unless source code has been modified)</li>
+               <li>sigevent.url: The URL to the sigevent service.</li>
+               <li>inventory.url: The URL to the inventory service.</li>
+               <li>zookeeper.url: The URL to the zookeeper service.</li>
+            </ul>
+         </subsection>
+         <subsection name="mrf_config.xml">
+            <p>This file holds the lookup table for what source product type to map to MRF product
+               type. Most mappings should follow the following pattern unless otherwise configured
+               in Inventory WS.</p>
+            <source><productType>
+         <name>MORCR143LLDY_SRC</name>
+         <targets>
+            <default>MORCR143LLDY</default>
+            <target>
+               <name>MORCR143LLDY_MERCATOR</name>
+               <type>mercator</type>
+            </target>
+         </targets>
+      </productType></source>
+         </subsection>
+         <subsection name="link_config.xml">
+            <p>This file holds the lookup table for what source product type to map to the linked final product
+               type. Most mappings should follow the following pattern unless otherwise configured
+               in Inventory WS.</p>
+            <source>      <productType>
+         <name>MORCR367LLDY</name>
+         <type>STANDARD</type>
+         <targets>
+            <default>TEST</default>
+            <target>
+               <name>TEST_MERCATOR</name>
+               <type>mercator</type>
+            </target>
+         </targets>
+      </productType></source>
+         </subsection>
+         <subsection name="horizon_client.lcf">
+            <p>This file holds the log4j configuration for this program. Please consult the log4j
+               properties file <a
+                  href="http://logging.apache.org/log4j/1.2/manual.html#Configuration">configuration
+                  documentation</a> for more details on how to customize the log.</p>
+         </subsection>
+      </section>
+   </body>
+
+</document>

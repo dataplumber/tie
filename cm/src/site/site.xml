@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+Copyright 2007-2013, by the California Institute of Technology.
+ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+
+$Id: $
+-->
+
+<project xmlns="http://maven.apache.org/DECORATION/1.4.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd"
+   name="The Imagery Exchange CM">
+
+   <bannerLeft>
+      <src>images/gibs_logo.jpg</src>
+      <href>http://horizon.jpl.nasa.gov/</href>
+   </bannerLeft>
+
+   <bannerRight>
+      <name>The Imagery Exchange CM</name>
+   </bannerRight>
+
+   <body>
+      <menu name="CM Documentation">
+         <item name="About TIE CM" href="index.html"/>
+      </menu>
+
+      <menu name="System Documentation">
+         <item name="Release Description" href="release/index.html"/>
+      </menu>
+
+      <menu name="Program Sets">
+         <item name="Administer" href="../administer/index.html"/>
+         <item name="Data Handlers" href="../handlers/index.html"/>
+         <item name="Distribute" href="../distribute/index.html"/>
+         <item name="Generate" href="../generate/index.html"/>
+         <item name="Middleware" href="../middleware/index.html"/>
+      </menu>
+
+      <menu ref="reports"/>
+   </body>
+</project>

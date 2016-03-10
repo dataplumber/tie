@@ -1,0 +1,1 @@
+grails run-app -Dgrails.server.port.http=9192 -Ddmas.app=INVENTORY

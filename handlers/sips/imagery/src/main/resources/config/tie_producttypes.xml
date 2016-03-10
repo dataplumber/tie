@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handler>
+   <productTypes>
+      <sigevent>http://localhost:8100/sigevent/</sigevent>
+      <interval>60</interval>
+      <productType>
+         <name>MYG09_LHD_143_SRC</name>
+         <sourceURL>file:///Volumes/HD-PATU3/Development/Data/tie/staging/data/MYG09_LHD_143/</sourceURL>
+         <fileSet minOccurs="3" productNaming="MYG09_LHD_143\.A\d{7}\.r\d{2}c\d{2}\.006">
+            <expression>MYG09_LHD_143\.A\d{7}\.r\d{2}c\d{2}\.006\.\d{13}\.(jpg|met|jgw)</expression>
+         </fileSet>
+      </productType>
+      <productType>
+         <name>MYG09_LHD_721_SRC</name>
+         <sourceURL>file:///Volumes/HD-PATU3/Development/Data/tie/staging/data/MYG09_LHD_721/</sourceURL>
+         <fileSet minOccurs="3" productNaming="MYG09_LHD_721\.A\d{7}\.r\d{2}c\d{2}\.006">
+            <expression>MYG09_LHD_721\.A\d{7}\.r\d{2}c\d{2}\.006\.\d{13}\.(jpg|met|jgw)</expression>
+         </fileSet>
+      </productType>
+      <productType>
+         <name>MYG09_LQD_121_SRC</name>
+         <sourceURL>file:///Volumes/HD-PATU3/Development/Data/tie/staging/data/MYG09_LQD_121/</sourceURL>
+         <fileSet minOccurs="4" productNaming="MYG09_LQD_121\.A\d{7}\.r\d{2}c\d{2}\.006">
+            <expression>MYG09_LQD_121\.A\d{7}\.r\d{2}c\d{2}\.006\.\d{13}\.(jpg|jgw|met|txt)</expression>
+         </fileSet>
+      </productType>
+      <productType>
+         <name>SMAP_L3SMA_EG_SRC</name>
+         <sourceURL>file:///Volumes/HD-PATU3/Development/Data/sips_pdr/staging/data/SMAP_L3SMA_EG/</sourceURL>
+         <fileSet minOccurs="3">
+            <expression>SMAP_L3_SM_A_\d{8}_D\d{5}_\d{3}_soil_moisture\.(png|pgw|met)</expression>
+         </fileSet>
+      </productType>
+   </productTypes>
+</handler>

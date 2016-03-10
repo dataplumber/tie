@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Installation of the MRF Product Generator</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+
+      <!-- The body of the document contains a number of sections -->
+      <section name="Installation">
+
+         <!-- Within sections, any XHTML can be used -->
+         <p>This document describes how to install and configure the MRF Product Generator
+            application. The following sections can be found in this document:</p>
+
+         <ul>
+            <li><a href="#Distribution_Content">Distribution Content</a></li>
+            <li><a href="#Configuration">Configuration</a></li>
+         </ul>
+
+      </section>
+
+      <section name="Distribution Content">
+
+         <p>The program set is packaged in a self-contained TAR/GZIP file located in the target
+            directory after packaging is complete. The package can be extracted with the following
+            command (where X.X.X is the current version):</p>
+         <source>
+% mvn package
+% tar -xzvf target/generate-mrf-X.X.X.tar.gz</source>
+         <p>Below is an illustration of the distribution after it has been extracted:</p>
+         <p><img alt="Generate MRF Directory Structure" src="../images/generate-dir.jpg"/></p>
+         <p>The contents of the package are as follows:</p>
+         <ul>
+            <li>sbin - Data directory containing the executable to star the product generation
+               service.</li>
+            <li>lib - Directory containing java program's run-time libraries.</li>
+            <li>include - Support libraries for the executable's runtime.</li>
+            <li>config - Directory containing multiple configuration files.</li>
+         </ul>
+      </section>
+
+      <section name="Configuration">
+         <p>The following configurations can be modified depending on user needs:</p>
+
+         <subsection name="mrfgen_config.xml">
+            <source>
+   &lt;serverName&gt;testServer&lt;/serverName&gt;
+   &lt;default&gt;GIBS&lt;/default&gt;
+   &lt;sigevent&gt;http://localhost:8100/sigevent&lt;/sigevent&gt;
+   &lt;jobkeeper&gt;
+      &lt;server&gt;localhost:2181&lt;/server&gt;
+   &lt;/jobkeeper&gt;
+   &lt;pylinePath&gt;/home/tietest/test/pyline&lt;/pylinePath&gt;</source>
+            <p>The following values can be set in the mrfgren_config.xml file.</p>
+            <ul>
+               <li>serverName: The unique name of the server being launched.</li>
+               <li>default: The name of the pool of jobs under ZK.</li>
+               <li>sigevent: The url of the Sigevent service.</li>
+               <li>jobkeeper-server: The url of the ZooKeeper instance.</li>
+               <li>pylinePath: The path to the directory containing the pyline.py script.</li>
+            </ul>
+         </subsection>
+         <subsection name="mrfgen_logconfig.lcf">
+            <p>This file holds the log4j configuration for this program. Please consult the log4j
+               xml <a href="http://logging.apache.org/log4j/2.x/manual/configuration.html#XML"
+                  >configuration documentation</a> for more details on how to customize the log.</p>
+         </subsection>
+      </section>
+   </body>
+
+</document>

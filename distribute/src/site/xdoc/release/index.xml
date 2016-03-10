@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Copyright 2013, by the California Institute of Technology. -->
+<!-- ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. -->
+<!--  -->
+<!-- $Id: $ -->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+   <properties>
+      <title>Release Description</title>
+      <author>C. Alarcon</author>
+   </properties>
+   <body>
+      <section name="Release Description">
+         <p>The Release Description Documents (RDDs) detail the new and modified capabilities that
+            comprise a particular Distribute Program Set release. These documents will also describe
+            any impact that the new or modified capabilities will have on TIE operations, data
+            providers and data consumers. The intended audience for these documents includes the TIE
+            Test Engineer and Configuration Manager.</p>
+         <subsection name="Release History">
+            <ul>
+               <li>Version: <a href="./index-0.4.0.html">0.4.0</a>
+                  <ul>
+                     <li>Date: 2014-07-29</li>
+                     <li>Description: This release of the Distribute Program Set is a component of
+                        the integrated release (<a href="./index-0.4.0.html">0.4.0</a>) of the TIE
+                        System. This release is intended as an operational release.</li>
+                  </ul>
+               </li>
+               <li>Version: <a href="./index-0.3.0.html">0.3.0</a>
+                  <ul>
+                     <li>Date: 2014-04-11</li>
+                     <li>Description: This release of the Distribute Program Set is a component of
+                        the integrated release (<a href="./index-0.3.0.html">0.3.0</a>) of the TIE
+                        System. This release is intended as an operational release.</li>
+                  </ul>
+               </li>
+               <li>Version: <a href="./index-0.2.0c.html">0.2.0c</a>
+                  <ul>
+                     <li>Date: 2013-12-16</li>
+                     <li>Description: This release of the Distribute Program Set is a component of
+                        the integrated release (<a href="./index-0.2.0c.html">0.2.0c</a>) of the TIE
+                        System. This release is intended as an operational release.</li>
+                  </ul>
+               </li>
+            </ul>
+         </subsection>
+      </section>
+   </body>
+</document>

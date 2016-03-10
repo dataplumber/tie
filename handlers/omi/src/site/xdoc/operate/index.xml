@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Copyright 2007-2013, by the California Institute of Technology. -->
+<!-- ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. -->
+<!--  -->
+<!-- $Id: $ -->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+   <properties>
+      <title>Operation</title>
+      <author>T. Huang</author>
+   </properties>
+   <body>
+      <section name="Operation">
+         <p>This document describes how to use the OMI Data Handler applications. Running the Ingest
+            clients is simple, since the current release only has a few client command-line
+            programs. The following sections can be found in this document:</p>
+         <ul>
+            <li><a href="#Environment_Setup">Environment Setup</a></li>
+            <li><a href="#Running_the_Clients">Running the Clients</a></li>
+         </ul>
+      </section>
+      <section name="Environment Setup" id="Environment_Setup">
+         <p>In order to setup the environment the user must load the <i>useHORIZON.csh</i> script
+            before running any of the OMI Data Handler programs. The automatic loading of this
+            script can be accomplished by adding the loading command into the user's <i>'.cshrc'</i>
+            or <i>'.bash'</i> files. Or it can be run on the command-line as follows:</p>
+         <source>% source useHORIZON.csh</source>
+         <p>In addition, HORIZON_LOGGING can be set to point to where log files should be written to.
+            The default value for HORIZON_LOGGING is current directory.</p>
+         <source>
+% setenv HORIZON_LOGGING &lt;path to directory for log files&gt;
+         </source>
+      </section>
+
+      <section name="Running the Clients" id="Running_the_Clients">
+         <p>The OMI Data Handler applications contains utilities and command programs for the user
+            to interact with the HORIZON Ingest system.</p>
+
+         <subsection name="OMI">
+            <p>This is a multi-operation utility program. As of this release operations: add,
+               replace, list, login, and help are supported.</p>
+            <source>
+% omi -h
+GIBS Data Handler Release 0.2.0b, September 2013
+Copyright 2013, Jet Propulsion Laboratory, Caltech, NASA
+usage: omi [options]
+options:
+ -e,--end &lt;endDate&gt;               end date yyyy-MM-dd
+ -h,--help                        print this message
+ -r,--repo &lt;repo&gt;                 local repository directory
+ -s,--start &lt;startDate&gt;           start date yyyy-MM-dd
+ -t,--productType &lt;productType&gt;   target product type
+            </source>
+            <p>The handler creates and manages a local repository</p>
+
+            <img src="../images/handler_repo.jpg" alt=""/>
+            <ul>
+               <li><i>cache</i> - A cache file is created for each product type for the handler to
+                  skip files that are in process to be archived.</li>
+               <li><i>error</i> - For handlers after data is ingested locally, there are really two
+                  types of errors: submission and validation. The bad product data will be moved to
+                  this location for operator to review.</li>
+               <li><i>staging</i> - Stores staged product data and the generated SIPs. Genreated
+                  SIPs are either in <i>pending</i> or <i>submitted</i>. The <i>pending</i> folder
+                  contains SIPs that are ready to be submitted to Manager for archival. The
+                     <i>submitted</i> folder contains SIPs that have been submitted to the Manager
+                  web service and it is in process to be archived.</li>
+            </ul>
+
+            <p>When lauch the OMI handler without any input arguments, the handler will start from
+               current date and ingest files according to the <i>tie_producttypes.xml</i>. This OMI
+               handler retrieves imagery products from provider's anonymous FTP site. It performs
+               some valiations on the imagery product including file size, checksum, and tracking
+               the file modification time. The handler uses incrementally generated date values to
+               fetch data and the size of the product will be determined after the product is
+               downloaded.</p>
+
+            <source>
+% source useHORIZON.csh
+% omi
+            </source>
+
+         </subsection>
+         <subsection name="Shutdown the Handler">
+            <p>There are two ways to shutdown the OMI handler. The user could issue <i>Control-C</i>
+               to interrupt the process or the user could run the following command</p>
+            <source>
+% touch /tmp/omi_shutdown
+            </source>
+         </subsection>
+      </section>
+   </body>
+</document>

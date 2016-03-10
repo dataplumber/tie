@@ -1,0 +1,23 @@
+<configuration>
+   <destinationBasePath>/usr/local/tie_data/archive</destinationBasePath>
+   <productTypes>
+      <productType>
+         <name>MORCR143LLDY</name>
+         <linkType>NRT</linkType>
+         <targets>
+            <default>TESTLINK1</default>
+         </targets>
+      </productType>
+      <productType>
+         <name>MORCR367LLDY</name>
+         <type>STANDARD</type>
+         <targets>
+            <default>TESTLINK1</default>
+            <target>
+               <name>MORCR367LLDY</name>
+               <type>mercator</type>
+            </target>
+         </targets>
+      </productType>
+   </productTypes>
+</configuration>

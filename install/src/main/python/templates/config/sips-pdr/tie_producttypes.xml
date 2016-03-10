@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<handler>
+   <productTypes>
+      <sigevent>http://localhost:8100/sigevent/</sigevent>
+      <interval>60</interval>
+      <productType>
+         <name>SIPS_PDR</name>
+         <sourceURL>sftp://172.16.35.148/home/gibstest/Development/work/Data/archive-dit/MODAPS/run4/AQUA/PDR/</sourceURL>
+         <panURL>sftp://172.16.35.148/home/gibstest/Development/work/Data/archive-dit/MODAPS/run4/AQUA/PAN/</panURL>
+         <fileSet>
+            <expression>MODAPSops\d+\.\d+\.PDR</expression>
+         </fileSet>
+      </productType>
+   </productTypes>
+</handler>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Operating the MRF Product Generator</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+
+   <body>
+      <section name="Operation">
+
+         <p>The MRF Product Generation software package functions as a ZooKeeper Client. As a
+            result, please ensure that a ZooKeeper instance is running at the configured
+            location.</p>
+
+         <ul>
+            <li><a href="#Running_the_Package">Running the Package</a></li>
+         </ul>
+
+      </section>
+      <section name="Running the Package">
+
+         <p>To run the program, simply execute the script located under 'sbin'.</p>
+         <source>% ./mrfgenserver</source>
+         <p>Assuming all configurations were set in the config file, the daemon should start. Append
+            the command with '&amp;' to force it into the background.</p>
+
+         <p>If the config file is not used, the following values can be specified via command
+            line.</p>
+         <ul>
+            <li>-f : Group name</li>
+            <li>-n : Engine name</li>
+            <li>-w : Max wait time in between server pings</li>
+            <li>-m : Maximum number of threads to spawn</li>
+            <li>-e : Sigevent url</li>
+            <li>-z : Zookeeper url</li>
+            <li>-o : Output directory path for generated configuration file. (Use only if not
+               archiving generated config file)</li>
+            <li>-t : Path to a .json file to manually run through the product generation
+               workflow.</li>
+         </ul>
+
+      </section>
+
+   </body>
+
+</document>

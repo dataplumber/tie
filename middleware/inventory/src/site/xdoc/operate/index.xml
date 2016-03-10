@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Operating the Inventory WS</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+      <section name="Operation">
+
+         <p>Inventory WS is a middleware application implemented using the Grails web framework. The
+            purpose of this middleware application is to be the centralized service for query and
+            access to the PostgreSQL Database.</p>
+
+         <ul>
+            <li><a href="#API">API</a></li>
+         </ul>
+
+      </section>
+      <section name="API">
+         <p>The Inventory-WS is intended to be consumed and interpreted by other services or
+            clients, not so much direct browser access. The available API calls are listed under the
+            'grails-app/conf/UrlMappings.groovy' file:</p>
+         <source>
+      //Misc
+      "/heartbeat"(controller:"productType"){action=[GET:"heartbeat"]}
+      
+      //Product Type
+      "/sip/"(controller:"sip"){action=[POST:"addSip", GET:"addSip"]}
+      "/sip/addSip"(controller:"sip"){action=[POST:"addSip", GET:"addSip"]}
+      "/productType/$id"(controller:"productType"){action=[GET:"show"]}
+      "/productTypeByName/$name"(controller:"productType"){action=[GET:"show"]}
+      "/productType/$id/listProducts"(controller:"productType"){action=[GET:"listProducts", POST:"listProducts"]}
+      "/productTypeByName/$name/listProducts"(controller:"productType"){action=[GET:"listProducts", POST:"listProducts"]}
+      "/productType/$id/latestProduct"(controller:"productType"){action=[GET:"showLatestProduct"]}
+      "/productTypeByName/$name/latestProduct"(controller:"productType"){action=[GET:"showLatestProduct"]}
+      "/productType/$id/policy"(controller:"productType"){action=[GET:"showPolicy"]}
+      "/productTypeByName/$name/policy"(controller:"productType"){action=[GET:"showPolicy"]}
+      "/productType/$id/coverage"(controller:"productType"){action=[GET:"showCoverage"]}
+      "/productTypeByName/$name/coverage"(controller:"productType"){action=[GET:"showCoverage"]}
+      "/productTypes"(controller:"productType"){action=[GET:"list"]}
+      
+      // PRODUCT
+      "/product/$id/status"(controller:"product"){action=[POST:"updateStatus"]}
+      "/product/$id"(controller:"product"){action=[GET:"show"]}
+      "/productType/$ptId/productByName/$productName"(controller:"product"){action=[GET:"show"]}
+      "/productTypeByName/$ptName/productByName/$productName"(controller:"product"){action=[GET:"show"]}
+      
+      "/product/$id/listOperations"(controller:"product"){action=[GET:"listOperations", POST:"listOperations"]}
+      "/productTypeByName/$ptName/productByName/$productName/listOperations"(controller:"product"){action=[GET:"listOperations", POST:"listOperations"]}
+      "/product/$id/operation/$operation"(controller:"product"){action=[GET:"showOperation", POST:"showOperation"]}
+      "/productTypeByName/$ptName/productByName/$productName/operation/$operation"(controller:"product"){action=[GET:"showOperation", POST:"showOperation"]}
+      "/productTypeByName/$ptName/productByName/$productName/status"(controller:"product"){action=[POST:"updateProductStatus"]}
+      "/product/$id/status"(controller:"product"){action=[POST:"updateProductStatus"]}
+      
+      "/product/$id/archivePath"(controller:"product"){action=[POST:"fetchArchivePath", GET:"fetchArchivePath"]}
+      "/productTypeByName/$ptName/productByName/$productName/archivePath"(controller:"product"){action=[POST:"fetchArchivePath", GET:"fetchArchivePath"]}
+      
+      // GIBS
+      "/productType/$id/listImages"(controller:"gibs"){action=[POST:"listImages", GET:"listImages"]}
+      "/productTypeByName/$name/listImages"(controller:"gibs"){action=[POST:"listImages", GET:"listImages"]}
+      </source>
+         <p>An example call:</p>
+         <source>/productType/$ptId"(controller:"productType"){action=[GET:"show"]}</source>
+         <p>is a query that takes $ptId to produce a response representing the corresponding product
+            type in the database. The controller/method responsible for handling this URL pattern is
+            productType.show(). There are other variations of the same query with different inputs
+            as seen above.</p>
+         <p>An example response is:</p>
+         <source>
+&lt;ProductType id='1'&gt;
+    &lt;productTypeId&gt;1&lt;/productTypeId&gt;
+    &lt;identifier&gt;MORCR143LLDY_SRC&lt;/identifier&gt;
+    &lt;title&gt;MORCR143LLDY&lt;/title&gt;
+    &lt;purgable&gt;false&lt;/purgable&gt;
+    &lt;purgeRate/&gt;
+    &lt;description&gt;Testing this bootstrap&lt;/description&gt;
+    &lt;policy&gt;
+        &lt;dataClass&gt;ARCHIVE-DIST&lt;/dataClass&gt;
+        &lt;dataFrequency&gt;0&lt;/dataFrequency&gt;
+        &lt;dataVolume&gt;0&lt;/dataVolume&gt;
+        &lt;dataDuration&gt;0&lt;/dataDuration&gt;
+        &lt;dataLatency&gt;0&lt;/dataLatency&gt;
+        &lt;deliveryRate&gt;0&lt;/deliveryRate&gt;
+        &lt;multiDay&gt;0&lt;/multiDay&gt;
+        &lt;accessType&gt;OPEN&lt;/accessType&gt;
+        &lt;basePathAppendType&gt;YEAR-DOY&lt;/basePathAppendType&gt;
+        &lt;dataFormat&gt;JPG&lt;/dataFormat&gt;
+        &lt;compressType&gt;GZIP&lt;/compressType&gt;
+        &lt;checksumType&gt;MD5&lt;/checksumType&gt;
+        &lt;spatialType&gt;POSTGRES&lt;/spatialType&gt;
+        &lt;accessConstraint&gt;none&lt;/accessConstraint&gt;
+        &lt;useConstraint&gt;none&lt;/useConstraint&gt;
+    &lt;/policy&gt;
+    &lt;locationPolicySet&gt;
+        &lt;locationPolicy&gt;
+            &lt;type&gt;ARCHIVE-OPEN&lt;/type&gt;
+            &lt;basePath&gt;/usr/local/tie_data/archive//MORCR143LLDY_SRC&lt;/basePath&gt;
+        &lt;/locationPolicy&gt;
+    &lt;/locationPolicySet&gt;
+    &lt;resourceSet&gt;
+        &lt;name&gt;ResourceTest&lt;/name&gt;
+        &lt;path&gt;/&lt;/path&gt;
+        &lt;type&gt;&lt;/type&gt;
+        &lt;description/&gt;
+    &lt;/resourceSet&gt;
+    &lt;coverages&gt;&lt;/coverages&gt;
+&lt;/ProductType&gt;
+      </source>
+      </section>
+
+   </body>
+
+</document>

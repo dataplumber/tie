@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+   Copyright 2013, by the California Institute of Technology.
+   ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+   
+   Build file for the Imagery Data Handler Common
+   
+   @author Thomas Huang {Thomas.Huang@jpl.nasa.gov}
+   @version $Id: $
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>gov.nasa.gibs</groupId>
+      <artifactId>sips</artifactId>
+      <version>0.4.0</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+   <artifactId>sips-common</artifactId>
+   <packaging>jar</packaging>
+   <name>SIPS Common Library</name>
+   <description>The SIPS Common Library </description>
+   <url>http://horizon.jpl.nasa.gov/tie/handlers/sips/common/</url>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-compress</artifactId>
+         <version>1.8</version>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.groovy</groupId>
+         <artifactId>groovy-all</artifactId>
+         <version>2.0.8</version>
+      </dependency>
+            <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <version>1.7.5</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+         <version>1.1.1</version>
+         <scope>compile</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.8.1</version>
+         <scope>compile</scope>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <finalName>${pom.artifactId}-${pom.version}</finalName>
+      <sourceDirectory>${basedir}/src/main/groovy</sourceDirectory>
+      <testSourceDirectory>${basedir}/src/test/groovy</testSourceDirectory>
+      <testResources>
+         <testResource>
+            <directory>src/test/resources</directory>
+         </testResource>
+      </testResources>
+      <plugins>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+               <includes>
+                  <include/>
+               </includes>
+               <systemProperties>
+                  <property>
+                     <name>tie.config.file</name>
+                     <value>${basedir}/src/test/resources/config.xml</value>
+                  </property>
+                  <property>
+                     <name>horizon.user.application</name>
+                     <value>pttest</value>
+                  </property>
+                  <property>
+                     <name>horizon.local.staging</name>
+                     <value>/tmp/tie</value>
+                  </property>
+                  <property>
+                     <name>dh.spring.config</name>
+                     <value>${basedir}/src/test/resources/datahandler.xml</value>
+                  </property>
+                  <property>
+                     <name>log4j.configuration</name>
+                     <value>file://${basedir}/src/test/resources/horizon_client.lcf</value>
+                  </property>
+                  <property>
+                     <name>log4j.configuratorClass</name>
+                     <value>org.apache.log4j.xml.DOMConfigurator</value>
+                  </property>
+                  <property>
+                     <name>horizon.home</name>
+                     <value>${project.build.outputDirectory}</value>
+                  </property>
+                  <property>
+                     <name>horizon.logging.file</name>
+                     <value>test.log</value>
+                  </property>
+                  <property>
+                     <name>common.test.path</name>
+                     <value>${basedir}/src/test/resources</value>
+                  </property>
+                  <property>
+                     <name>javax.xml.parsers.DocumentBuilderFactory</name>
+                     <value>com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl</value>
+                  </property>
+                  <property>
+                     <name>javax.xml.parsers.SAXParserFactory</name>
+                     <value>com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl</value>
+                  </property>
+               </systemProperties>
+            </configuration>
+         </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>compile</id>
+                  <phase>compile</phase>
+                  <configuration>
+                     <tasks>
+                        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+                           <classpath refid="maven.compile.classpath"/>
+                        </taskdef>
+                        <mkdir dir="${project.build.outputDirectory}"/>
+                        <groovyc destdir="${project.build.outputDirectory}"
+                           srcdir="${basedir}/src/main/groovy/" listfiles="true">
+                           <classpath refid="maven.compile.classpath"/>
+                        </groovyc>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>test</id>
+                  <phase>test</phase>
+                  <configuration>
+                     <tasks>
+                        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+                           <classpath refid="maven.test.classpath"/>
+                        </taskdef>
+                        <mkdir dir="${project.build.outputDirectory}"/>
+                        <groovyc destdir="${project.build.outputDirectory}"
+                           srcdir="${basedir}/src/test/groovy/" listfiles="true">
+                           <classpath refid="maven.test.classpath"/>
+                        </groovyc>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <phase>package</phase>
+                  <configuration>
+                     <tasks>
+                        <taskdef name="groovydoc" classname="org.codehaus.groovy.ant.Groovydoc">
+                           <classpath>
+                              <path refid="maven.compile.classpath"/>
+                           </classpath>
+                        </taskdef>
+                        <groovydoc destdir="target/site/apidocs" sourcepath="src/main/groovy"
+                           packagenames="**.*" use="true" windowtitle="Groovydoc" private="false"/>
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>2.1.1</version>
+            <dependencies>
+               <dependency>
+                  <groupId>commons-httpclient</groupId>
+                  <artifactId>commons-httpclient</artifactId>
+                  <version>3.1</version>
+                  <exclusions>
+                     <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                     </exclusion>
+                  </exclusions>
+               </dependency>
+            </dependencies>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+               <showSuccess>false</showSuccess>
+            </configuration>
+         </plugin>
+         <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.1</version>
+            <configuration>
+               <source>1.7</source>
+               <target>1.7</target>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+</project>

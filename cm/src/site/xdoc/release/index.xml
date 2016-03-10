@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Copyright 2013, by the California Institute of Technology. -->
+<!-- ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. -->
+<!--  -->
+<!-- $Id: $ -->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+   <properties>
+      <title>Release Description</title>
+      <author>Thomas Huang</author>
+   </properties>
+   <body>
+      <section name="Release Description">
+         <p>The Release Description Documents (RDDs) detail the new and modified capabilities that
+            comprise a particular TIE System release. These documents will also describe any impact
+            that the new or modified capabilities will have on TIE operations, data providers and
+            data consumers.</p>
+         <subsection name="Release History">
+            <ul>
+               <li>Version: <a href="./index-0.3.0.html">0.3.0</a>
+                  <ul>
+                     <li>Date: 2014-04-11</li>
+                     <li>Description: This release of TIE System includes minor updates to the
+                        release 0.2.0c.</li>
+                  </ul>
+               </li>
+               <li>Version: <a href="./index-0.2.0c.html">0.2.0c</a>
+                  <ul>
+                     <li>Date: 2013-12-08</li>
+                     <li>Description: This release of TIE System includes minor updates to the
+                        release 0.2.0b.</li>
+                  </ul>
+               </li>
+               <li>Version: <a href="./index-0.2.0b.html">0.2.0b</a>
+                  <ul>
+                     <li>Date: 2013-11-05</li>
+                     <li>Description: This release of TIE System includes minor updates to the
+                        release 0.2.0a.</li>
+                  </ul>
+               </li>
+               <li>Vesion: <a href="./index-0.2.0a.html">0.2.0a</a>
+                  <ul>
+                     <li>Date: 2013-10-01</li>
+                     <li>Description: This is the initial release of TIE System.</li>
+                  </ul>
+               </li>
+            </ul>
+         </subsection>
+      </section>
+   </body>
+</document>

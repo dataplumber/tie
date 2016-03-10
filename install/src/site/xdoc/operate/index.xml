@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2013, by the California Institute of Technology. -->
+<!-- ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. -->
+<!--  -->
+<!-- $Id: $ -->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+   <properties>
+      <title>Install Operation Guide</title>
+      <author email="Christian.Alarcon@jpl.nasa.gov">Christian Alarcon</author>
+   </properties>
+
+   <body>
+      <section name="Operation">
+
+         <!-- Within sections, any XHTML can be used -->
+         <p>This document describes how to use the Install application. The following sections can be found in this document:</p>
+         <ul>
+            <li><a href="#Script_Execution">Script Execution</a></li>
+            <li><a href="#Package_Identification">Package Identification</a></li>
+            <li><a href="#Maven_Tree_Mode">Maven Tree Mode</a></li>
+            <li><a href="#Manual_Path_Mode">Manual Path Mode</a></li>
+         </ul>
+
+      </section>
+
+      <section name="Script Execution" id="Script_Execution">
+         <p>To start the script, simply invoke the launch script. This iteration of the tool does not have any command line parameters. All input must be supplied via th configuration. To launch the script use the following: </p>
+         <source>
+% ./horizoninstall.py
+         </source>
+         <p>or with python specified if permissions do not allow for execution:</p>
+         <source>
+% python horizoninstall.py
+         </source>
+      </section>
+      <section name="Package Identification" id="Package_Identification">
+         <p>Depending on the mode configured, the tool will perform a directory search for files ending in .tar.gz. Once found, it will undergo an identification process. The current release does not support added code for identification, but rather defaults to a regex search for the section name inside the unzipped package.</p>
+         <p>Upon successful match the following will be shown:</p>
+         <source>
+******************************
+PROCESSING PACKAGE generate-mrf-0.3.0-generate-mrf.tar.gz
+
+Subsystem:     generate-mrf
+Has Top Level: Yes
+Base Path:     /Users/calarcon/dmas/software/src/tie/generate/generate-mrf/target
+Extracting To: /tmp/GIBS_INSTALL/generate-mrf
+
+Continue processing this package?(y or n): 
+         </source>
+         <p>Following the extraction, a check will performed if all files were accounted for and the temporary extraction area is empty. If not empty, the tool will prompt the user whether to keep the orphaned files, or continue with clean up.</p>
+      </section>
+      <section name="Maven Tree Mode" id="Maven_Tree_Mode">
+         <p>If either a TIE or Horizon tree path is specified, the tool will enter "Maven Tree Mode". It wil cycle through each section specified in the configuration (ignoring Default and Global) searching for tar balls. Once found, user prompting begins.</p>
+      </section>
+      <section name="Manual Path Mode" id="Maven_Path_Mode">
+         <p>If the manual path is specified, the tool will enter "Manual Path Mode". It will scan the specified directory for tar balls, then begin the identification process. Once identified, user prompting begins.</p>
+      </section>
+   </body>
+
+</document>
