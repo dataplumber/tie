@@ -43,7 +43,7 @@ else {
 
 <div id="operator-container">
 <div class="operator-loginInfo">
-Logged in as <span style="font-weight:bold"><?php print htmlentities($_SESSION['operator-username']); ?></span>&nbsp;&nbsp;&nbsp;
+Logged in as <span style="font-weight:bold"><?php print $_SESSION['operator-username']; ?></span>&nbsp;&nbsp;&nbsp;
 <a href="logout.php">Logout</a><br/>
 <!--<a href="images/manager_states.jpg" style="color:#fff;">Click here to view the state table diagram</a>-->
 </div>

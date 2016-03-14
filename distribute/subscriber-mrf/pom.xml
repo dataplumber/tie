@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!-- 
-  Copyright 2008-2009, by the California Institute of Technology.
+  Copyright 2008-2016, by the California Institute of Technology.
   ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
 
   $Id: pom.xml 3340 2009-07-23 19:34:38Z thuang $
@@ -16,12 +16,12 @@
    <groupId>gov.nasa.gibs</groupId>
    <artifactId>subscriber-mrf</artifactId>
    <packaging>jar</packaging>
-   
+
    <parent>
       <groupId>gov.nasa.gibs</groupId>
       <artifactId>distribute</artifactId>
       <relativePath>../pom.xml</relativePath>
-      <version>0.4.0</version>
+      <version>0.5.0</version>
    </parent>
 
    <name>Distribute Subscriber</name>
@@ -29,14 +29,10 @@
    <url>http://horizon.jpl.nasa.gov/tie/distribute/subscriber-mrf/</url>
 
    <properties>
-       <project.build.sourceEncoding>
-         UTF-8
-       </project.build.sourceEncoding>
-       <project.reporting.outputEncoding>
-         UTF-8
-       </project.reporting.outputEncoding>
-     </properties>
-   
+      <project.build.sourceEncoding> UTF-8 </project.build.sourceEncoding>
+      <project.reporting.outputEncoding> UTF-8 </project.reporting.outputEncoding>
+   </properties>
+
 
    <dependencies>
       <dependency>
@@ -59,11 +55,11 @@
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-log4j12</artifactId>
          <version>1.6.1</version>
-      </dependency>   
+      </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>commons-io</groupId>
@@ -73,7 +69,7 @@
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>inventory-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>commons-configuration</groupId>
@@ -83,7 +79,7 @@
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>sigevent-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>commons-logging</groupId>
@@ -98,12 +94,12 @@
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>generate-api</artifactId>
-         <version>0.4.0</version>
+         <version>0.5.0</version>
       </dependency>
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>generate-mrf</artifactId>
-         <version>0.4.0</version>
+         <version>0.5.0</version>
       </dependency>
    </dependencies>
 
@@ -113,7 +109,6 @@
       <resources>
          <resource>
             <directory>src/main/resources</directory>
-            <!--<targetPath>gov/nasa/podaac/distribute/resources</targetPath>-->
             <filtering>true</filtering>
             <includes>
                <include>**/config/*</include>
@@ -143,20 +138,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <version>2.1.1</version>
-            <dependencies>
-               <dependency>
-                  <groupId>commons-httpclient</groupId>
-                  <artifactId>commons-httpclient</artifactId>
-                  <version>3.1</version>
-                  <exclusions>
-                     <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                     </exclusion>
-                  </exclusions>
-               </dependency>
-            </dependencies>
+            <version>3.5</version>
          </plugin>
          <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
@@ -176,6 +158,7 @@
             </configuration>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
                <includes>
@@ -204,6 +187,7 @@
    <reporting>
       <plugins>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
             <reportSets>
                <reportSet>
@@ -215,11 +199,29 @@
             </reportSets>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+               <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <reportSets>
+               <reportSet>
+                  <id>html</id>
+                  <reports>
+                     <report>javadoc</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.9</version>
+            <configuration>
+               <showSuccess>false</showSuccess>
+            </configuration>
          </plugin>
       </plugins>
    </reporting>
+
 </project>

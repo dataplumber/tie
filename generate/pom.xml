@@ -11,18 +11,15 @@
       <version>0.0.0</version>
    </parent>
    <artifactId>generate</artifactId>
-   <version>0.4.0</version>
+   <version>0.5.0</version>
    <packaging>pom</packaging>
    <name>Generate Program Set</name>
    <description>The Generate program set provides capabilities to generate value-added products and perform other algorithm-based tasks. </description>
    <url>http://horizon.jpl.nasa.gov/tie/generate/</url>
+
    <properties>
-      <project.build.sourceEncoding>
-         UTF-8
-      </project.build.sourceEncoding>
-      <project.reporting.outputEncoding>
-         UTF-8
-      </project.reporting.outputEncoding>
+      <project.build.sourceEncoding> UTF-8 </project.build.sourceEncoding>
+      <project.reporting.outputEncoding> UTF-8 </project.reporting.outputEncoding>
    </properties>
 
    <modules>
@@ -35,20 +32,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <version>2.1.1</version>
-            <dependencies>
-               <dependency>
-                  <groupId>commons-httpclient</groupId>
-                  <artifactId>commons-httpclient</artifactId>
-                  <version>3.1</version>
-                  <exclusions>
-                     <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                     </exclusion>
-                  </exclusions>
-               </dependency>
-            </dependencies>
+            <version>3.5</version>
          </plugin>
       </plugins>
    </build>
@@ -58,7 +42,6 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.7</version>
             <reportSets>
                <reportSet>
                   <reports>
@@ -69,11 +52,27 @@
             </reportSets>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+               <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <reportSets>
+               <reportSet>
+                  <id>html</id>
+                  <reports>
+                     <report>javadoc</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.9</version>
+            <configuration>
+               <showSuccess>false</showSuccess>
+            </configuration>
          </plugin>
       </plugins>
    </reporting>

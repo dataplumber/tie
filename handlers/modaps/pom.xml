@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!-- 
-   Copyright 2013, by the California Institute of Technology.
+   Copyright 2016, by the California Institute of Technology.
    ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
    
    Build file for the Imagery Data Handler Common
@@ -18,7 +18,7 @@
    <parent>
       <groupId>gov.nasa.gibs</groupId>
       <artifactId>handlers</artifactId>
-      <version>0.4.0</version>
+      <version>0.5.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
    <artifactId>modaps</artifactId>
@@ -27,54 +27,51 @@
    <description>The MODAPS Imagery Data Handler Common. </description>
    <url>http://horizon.jpl.nasa.gov/tie/handlers/modaps/</url>
 
-   <repositories>
-      <repository>
-         <id>springsource-repo</id>
-         <name>SpringSource Repository</name>
-         <url>http://repo.springsource.org/release</url>
-      </repository>
-   </repositories>
+   <properties>
+      <project.build.sourceEncoding> UTF-8 </project.build.sourceEncoding>
+      <project.reporting.outputEncoding> UTF-8 </project.reporting.outputEncoding>
+   </properties>
 
    <dependencies>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-crawlercache</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>ingest-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-httpfetch</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>handlers-framework</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>common</artifactId>
-         <version>0.4.0</version>
+         <version>0.5.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>sigevent-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>org.codehaus.groovy</groupId>
@@ -115,17 +112,6 @@
             <directory>src/test/resources</directory>
          </testResource>
       </testResources>
-      <!--
-      <pluginManagement>
-         <plugins>
-            <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-antrun-plugin</artifactId>
-               <version>1.7</version>
-            </plugin>
-         </plugins>
-      </pluginManagement>
-      -->
       <plugins>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -226,7 +212,7 @@
                   </goals>
                </execution>
                <execution>
-                  <phase>package</phase>
+                  <phase>site</phase>
                   <configuration>
                      <tasks>
                         <taskdef name="groovydoc" classname="org.codehaus.groovy.ant.Groovydoc">
@@ -262,25 +248,12 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <version>2.1.1</version>
-            <dependencies>
-               <dependency>
-                  <groupId>commons-httpclient</groupId>
-                  <artifactId>commons-httpclient</artifactId>
-                  <version>3.1</version>
-                  <exclusions>
-                     <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                     </exclusion>
-                  </exclusions>
-               </dependency>
-            </dependencies>
+            <version>3.5</version>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-report-plugin</artifactId>
-            <version>2.5</version>
+            <version>2.9</version>
             <configuration>
                <showSuccess>false</showSuccess>
             </configuration>
@@ -289,12 +262,53 @@
             <inherited>true</inherited>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.3.1</version>
+            <version>3.5.1</version>
             <configuration>
-               <source>1.7</source>
-               <target>1.7</target>
+               <source>1.8</source>
+               <target>1.8</target>
             </configuration>
          </plugin>
       </plugins>
    </build>
+
+   <reporting>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <reportSets>
+               <reportSet>
+                  <reports>
+                     <report>dependencies</report>
+                     <report>summary</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+               <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <reportSets>
+               <reportSet>
+                  <id>html</id>
+                  <reports>
+                     <report>javadoc</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.9</version>
+            <configuration>
+               <showSuccess>false</showSuccess>
+            </configuration>
+         </plugin>
+      </plugins>
+   </reporting>
+
 </project>

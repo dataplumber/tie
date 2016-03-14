@@ -29,8 +29,8 @@ if ($response ['status'] == 200) {
 			$admin_flag = ($role == "ADMIN") ? true : $admin_flag;
 		}
 	}
-	$_SESSION ['operator-username'] = htmlspecialchars($username);
-	$_SESSION ['operator-password'] = htmlspecialchars($password);
+	$_SESSION ['operator-username'] = $username;
+	$_SESSION ['operator-password'] = $password;
 	$_SESSION ['operator-admin'] = $admin_flag;
 	print "{\"status\": \"OK\", \"response\": \"$response[content]\"}";
 } else if ($response ['status'] == 401) {

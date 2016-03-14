@@ -114,8 +114,9 @@ class CMRDataCrawler extends TimerTask {
 				def cmrResult = new JsonSlurper().parseText(EntityUtils.toString(entity))
 				if(pageNum == 1 ) {
 					granulesHits = response.getFirstHeader("CMR-Hits").getValue().toInteger()
-					log.debug("${granulesHits} granules retrieved from: ${cmrUrl}")
+					log.debug("${granulesHits} total granules found!")
 				}
+				log.debug("granules retrieved from: ${cmrUrl}")
 				
 				this.productType.cacheFile.save(null, "${this.productType.workspace.getLocation(Workspace.Location.CACHE)}${File.separator}${this.productType.name}.cache.xml")
 				
@@ -131,6 +132,7 @@ class CMRDataCrawler extends TimerTask {
 						if(retrievedDataIds == null || (!retrievedDataIds.contains(result.id.toString()) || updatedTimestamp > this.productType.cacheFile.lastRetrieved) ) {
 							Date parsedStartDate = format.parse(result.time_start.toString())
 							String wmsUrl = this.productType.sourceURL.replace('${time}', this.productType.wmsDateTimeFormat.format(parsedStartDate).toString())
+							log.debug("Found new/updated granule: ${result.id.toString()}")
 							this.handler.setGranuleId(result.id)
 							this.walk(wmsUrl, this.fileExpressions, this.handler)
 						}
@@ -173,7 +175,7 @@ class CMRDataCrawler extends TimerTask {
 
 		List<Pattern> patterns = []
 
-		log.debug("inside walk method: ${rootURL}")
+		log.debug("Pulling from WMS URL: ${rootURL}")
 
 		expressions.each {
 			log.debug("Compile reg: ${it}")

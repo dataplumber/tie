@@ -43,7 +43,7 @@ environments {
          dialect = "org.hibernate.dialect.PostgreSQLDialect"
          url = "jdbc:postgresql://localhost:5432/thuang"
          username = "thuang"
-         password = 'password'
+         password = 'txh388'
       }
    }
    test {

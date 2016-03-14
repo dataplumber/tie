@@ -2,11 +2,11 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
    http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+   <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>gov.nasa.gibs</groupId>
       <artifactId>generate</artifactId>
-      <version>0.4.0</version>
+      <version>0.5.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -15,12 +15,16 @@
    <url>http://horizon.jpl.nasa.gov/tie/generate/generate-mrf/</url>
    <description>The MRF Product Generator program set includes the core implementation of the Zookeeper product generation client which interfaces with the GDAL Wrapper script to generate MRFs.</description>
 
+   <properties>
+      <project.build.sourceEncoding> UTF-8 </project.build.sourceEncoding>
+      <project.reporting.outputEncoding> UTF-8 </project.reporting.outputEncoding>
+   </properties>
 
    <dependencies>
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>generate-api</artifactId>
-         <version>0.4.0</version>
+         <version>0.5.0</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -91,12 +95,12 @@
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>sigevent-api</artifactId>
-         <version>5.0.0e</version>
+         <version>5.1.0</version>
       </dependency>
       <dependency>
          <groupId>commons-codec</groupId>
@@ -121,25 +125,11 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <version>2.1.1</version>
-            <dependencies>
-               <dependency>
-                  <groupId>commons-httpclient</groupId>
-                  <artifactId>commons-httpclient</artifactId>
-                  <version>3.1</version>
-                  <exclusions>
-                     <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                     </exclusion>
-                  </exclusions>
-               </dependency>
-            </dependencies>
+            <version>3.5</version>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.5</version>
             <configuration>
                <argLine>-Xms75m -Xmx2048m</argLine>
                <showSuccess>false</showSuccess>
@@ -182,10 +172,10 @@
             <inherited>true</inherited>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.3.2</version>
+            <version>3.5.1</version>
             <configuration>
-               <source>1.7</source>
-               <target>1.7</target>
+               <source>1.8</source>
+               <target>1.8</target>
             </configuration>
             <executions>
                <execution>
@@ -200,7 +190,7 @@
                      </includes>
                   </configuration>
                </execution>
-                <execution>
+               <execution>
                   <id>second</id>
                   <goals>
                      <goal>compile</goal>
@@ -209,13 +199,9 @@
                      <includes>
                         <include>**/MrfGenServer.*</include>
                      </includes>
-<!--                      <excludes>
-                        <exclude>**/ZKLoopThread.*</exclude>
-                        <exclude>**/GenerationThread.*</exclude>
-                     </excludes> -->
                   </configuration>
                </execution>
-                               <execution>
+               <execution>
                   <id>third</id>
                   <goals>
                      <goal>compile</goal>
@@ -224,10 +210,6 @@
                      <includes>
                         <include>**/*</include>
                      </includes>
-<!--                      <excludes>
-                        <exclude>**/ZKLoopThread.*</exclude>
-                        <exclude>**/GenerationThread.*</exclude>
-                     </excludes> -->
                   </configuration>
                </execution>
             </executions>
@@ -250,12 +232,29 @@
             </reportSets>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+               <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <reportSets>
+               <reportSet>
+                  <id>html</id>
+                  <reports>
+                     <report>javadoc</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.9</version>
+            <configuration>
+               <showSuccess>false</showSuccess>
+            </configuration>
          </plugin>
       </plugins>
    </reporting>
+
 </project>

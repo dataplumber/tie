@@ -56,10 +56,9 @@ class AMSR2FileHandler implements FileHandler, FileProductHandler {
 
    @Override
    void process(List<FileProduct> fps) throws DataHandlerException {
-
       boolean inCache = true
-
-      String productName = fps.find { FileProduct fp ->
+     
+	   String productName = fps.find { FileProduct fp ->
          fp.name.endsWith(".tgz")
       }.name
       productName = productName?.substring(0, productName.lastIndexOf(".tgz"))
@@ -120,24 +119,25 @@ class AMSR2FileHandler implements FileHandler, FileProductHandler {
       if (fileProducts.size() == 0) {
          return
       }
-
-      Date timetag = new Date()
-      String location = "${productType.dataStorage}${File.separator}${productName}_${timetag.time}${File.separator}"
-      String shadow = "${productType.dataStorage}${File.separator}.shadow${File.separator}${productName}${File.separator}"
-
-      // download to a shadow directory to prevent partial read by any scanners
-      File s = new File(shadow)
-      if (!s.exists()) {
-         try {
-            if (!s.mkdirs()) {
-               logger.error("Unable to create shadow directory for download: ${shadow}")
-               throw new DataHandlerException("Unable to create shadow directory for download: ${shadow}")
-            }
-         } catch (SecurityException e) {
-            throw new DataHandlerException("Unable to create shadow directory for download: ${shadow}", e)
-         }
-      }
-
+	  
+		Date timetag = new Date()
+		String location = "${productType.dataStorage}${File.separator}${productName}_${timetag.time}${File.separator}"
+		String shadow = "${productType.dataStorage}${File.separator}.shadow${File.separator}${productName}${File.separator}"
+		
+		// download to a shadow directory to prevent partial read by any scanners
+		File s = new File(shadow)
+		if (!s.exists()) {
+			try {
+				if (!s.mkdirs()) {
+					logger.error("Unable to create shadow directory for download: ${shadow}")
+					throw new DataHandlerException("Unable to create shadow directory for download: ${shadow}")
+				}
+			} catch (SecurityException e) {
+				throw new DataHandlerException("Unable to create shadow directory for download: ${shadow}", e)
+			}
+		}
+		File newLocation = new File(location)
+	  
 		Product product = new Product(productType, productName)
 		product.shadowLocation = shadow
 		product.stageLocation = location
@@ -176,27 +176,46 @@ class AMSR2FileHandler implements FileHandler, FileProductHandler {
 
 					// untar the file
 					try {
-						File unzipped = TarGzipUtil.unGzip(new File("${shadow}${File.separator}${fileProduct.name}"), new File(shadow))
-						def files = TarGzipUtil.unTar(unzipped, new File(shadow))
+						File tarball = new File("${shadow}${File.separator}${fileProduct.name}")
+						File unzipped = TarGzipUtil.unGzip(tarball, new File(shadow))
+						TarGzipUtil.unTar(unzipped, new File(shadow))
+						unzipped.delete()
+						tarball.delete()
+						
+						// if a previous copy exists, then delete it first and use the latest
+						if (newLocation.exists()) {
+							logger.trace("newLocation exists! ${newLocation}")
+						   newLocation.listFiles().each {
+							  it.delete()
+						   }
+						}
+						
+						if (!s.renameTo(newLocation)) {
+							logger.error("Unable to move downloaded product to ${location}")
+							_cleanup(shadow)
+							throw new DataHandlerException("Unable to move downloaded product to ${location}")
+						 }
+						
+						new File("${shadow}${File.separator}${fileProduct.name}").delete()
+						
+						def files = new File(location).listFiles()
 						if (files.size() != 0) {
 
 							if (logger.debugEnabled) { logger.debug "Successfully unzipped and untared file ${fileProduct.name}.  File listing..." }
-							
+								
 							files.each { File f ->
 								if( f.name.endsWith('.jpg') ) {
 									generateJgw = true
 								} else if ( f.name.endsWith('gw')) {
 									generateWorldFile &= false
 								}
+								
 								FileProduct newProduct = new LocalFileProduct(location + f.name)
-								newProduct.setDigestValue(ChecksumUtility.getDigest(ChecksumUtility.DigestAlgorithm.MD5, f), false)
+								newProduct.setDigestValue(ChecksumUtility.getDigest(ChecksumUtility.DigestAlgorithm.MD5, f))
 								product.addFileProduct(newProduct)
 
 								if (logger.debugEnabled) { logger.debug("${f.name} ${f.size()}") }
 							}
-
-							new File("${shadow}${File.separator}${fileProduct.name}").delete()
-							unzipped.delete()
 						}
 					} catch (Exception e) { //TODO sigevent here?
 						logger.debug("FAILED TO UNTAR FILE ${fileProduct.name}", e)
@@ -215,23 +234,12 @@ class AMSR2FileHandler implements FileHandler, FileProductHandler {
       if (sh.exists() && sh.listFiles().size() == 0) {
          // no file needs to be archived
          sh.deleteDir()
-      } else {
+      } 
+	  
+
+	  if (newLocation.exists() && newLocation.listFiles().size() > 0) {
          // completed file downloads.  Move the product to a visible location
 
-         // if a previous copy exists, then delete it first and use the latest
-         File newLocation = new File(location)
-         if (newLocation.exists()) {
-            newLocation.listFiles().each {
-               it.delete()
-            }
-            newLocation.deleteDir()
-         }
-		 
-         if (!s.renameTo(newLocation)) {
-            logger.error("Unable to move downloaded product to ${location}")
-            _cleanup(shadow)
-            throw new DataHandlerException("Unable to move downloaded product to ${location}")
-         }
 
          logger.info("Retrieved new product ${productType.name}:${productName}")
 		 

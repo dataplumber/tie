@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!-- 
-   Copyright 2013, by the California Institute of Technology.
+   Copyright 2016, by the California Institute of Technology.
    ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
    
    Imagery Data Handlers Program Set Parent POM
@@ -21,11 +21,16 @@
       <version>0.0.0</version>
    </parent>
    <artifactId>handlers</artifactId>
-   <version>0.4.0</version>
+   <version>0.5.0</version>
    <packaging>pom</packaging>
    <name>Handlers Program Set</name>
    <description>The Imagery Data Handlers Program set for harvesting new data from imagery providers. </description>
    <url>http://horizon.jpl.nasa.gov/tie/handlers/</url>
+
+   <properties>
+      <project.build.sourceEncoding> UTF-8 </project.build.sourceEncoding>
+      <project.reporting.outputEncoding> UTF-8 </project.reporting.outputEncoding>
+   </properties>
 
    <modules>
       <module>common</module>
@@ -44,20 +49,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <version>2.1.1</version>
-            <dependencies>
-               <dependency>
-                  <groupId>commons-httpclient</groupId>
-                  <artifactId>commons-httpclient</artifactId>
-                  <version>3.1</version>
-                  <exclusions>
-                     <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                     </exclusion>
-                  </exclusions>
-               </dependency>
-            </dependencies>
+            <version>3.5</version>
          </plugin>
       </plugins>
    </build>
@@ -77,12 +69,29 @@
             </reportSets>
          </plugin>
          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+               <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <reportSets>
+               <reportSet>
+                  <id>html</id>
+                  <reports>
+                     <report>javadoc</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.9</version>
+            <configuration>
+               <showSuccess>false</showSuccess>
+            </configuration>
          </plugin>
       </plugins>
    </reporting>
+
 </project>

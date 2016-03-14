@@ -27,7 +27,7 @@ import org.apache.zookeeper.*;
 
 public class Subscriber implements Watcher {
    private final String COPYRIGHT = "Copyright 2014, Jet Propulsion Laboratory, Caltech, NASA";
-   private final String VERSION = "0.4.0";
+   private final String VERSION = "0.5.0";
    private final String VERSION_DATE = "March 2014";
    private final String VERSION_SUMMARY = "MRF Subscriber Package "+VERSION+", "+VERSION_DATE ;
 

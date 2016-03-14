@@ -8,8 +8,8 @@ package gov.nasa.gibs.tie.handlers.common
  * To change this template use File | Settings | File Templates.
  */
 class Constants {
-   static final String API_VERSION = "5.0.0e"
-   static final String VERSION = "0.4.0"
+   static final String API_VERSION = "5.1.0"
+   static final String VERSION = "0.5.0"
    static final String VERSION_DATE = "July 2014"
    static final String API_VERSION_STR = "HORIZON API release ${API_VERSION}"
    static final String COPYRIGHT =
