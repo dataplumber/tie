@@ -135,9 +135,10 @@ class CMRDataCrawler extends TimerTask {
 							log.debug("Found new/updated granule: ${result.id.toString()}")
 							this.handler.setGranuleId(result.id)
 							this.walk(wmsUrl, this.fileExpressions, this.handler)
+						} else{
+							log.trace("Imagery for granuleID ${result.id.toString()} already downloaded, skip it!")
 						}
 						totalGranulesProcessed++
-						log.debug("Granule already downloaded, skip it! ${result.id.toString()}")	
 					}
 				}
 				pageNum++

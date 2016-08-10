@@ -156,7 +156,7 @@ class PDRProductType extends ProductTypeImpl implements Worker, Runnable {
    }
 
    @Override
-   void cleanup() throws DataHandlerException {
+   void cleanup() {
       //this.pool.shutdown()
       crawlerPool.shutdown()
       ingestPool.shutdown()

@@ -11,62 +11,64 @@ grails.project.source.level = 1.6
 //   run: [maxMemory:1024, minMemory:64, debug:false, maxPerm:256]
 //]
 
+grails.project.dependency.resolver = "maven"
+
 grails.project.dependency.resolution = {
-   // inherit Grails' default dependencies
-   pom false
-   
-   inherits("global") {
-      // specify dependency exclusions here; for example, uncomment this to disable ehcache:
-      // excludes 'ehcache'
-   }
-   log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
-   checksums true // Whether to verify checksums on resolve
-   legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
+    // inherit Grails' default dependencies
+    pom false
 
-   repositories {
-      inherits true // Whether to inherit repository definitions from plugins
+    inherits("global") {
+        // specify dependency exclusions here; for example, uncomment this to disable ehcache:
+        // excludes 'ehcache'
+    }
+    log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    checksums true // Whether to verify checksums on resolve
+    legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
-      grailsPlugins()
-      grailsHome()
-      grailsCentral()
+    repositories {
+        inherits true // Whether to inherit repository definitions from plugins
 
-      mavenLocal()
-      mavenRepo "http://repo.grails.org/grails/plugins"
-      mavenRepo "http://repo1.maven.org/maven2"
-      //mavenCentral()
+        grailsPlugins()
+        grailsHome()
+        grailsCentral()
 
-      // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
-      //mavenRepo "http://snapshots.repository.codehaus.org"
-      //mavenRepo "http://repository.codehaus.org"
-      //mavenRepo "http://download.java.net/maven/2/"
-      //mavenRepo "http://repository.jboss.com/maven2/"
-   }
-   
+        mavenLocal()
+        mavenRepo "http://repo.grails.org/grails/plugins"
+        mavenRepo "http://repo1.maven.org/maven2"
+        //mavenCentral()
 
-   dependencies {
-      // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
+        // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
+        //mavenRepo "http://snapshots.repository.codehaus.org"
+        //mavenRepo "http://repository.codehaus.org"
+        //mavenRepo "http://download.java.net/maven/2/"
+        //mavenRepo "http://repository.jboss.com/maven2/"
+    }
 
-      // runtime 'mysql:mysql-connector-java:5.1.22'
-      compile 'postgresql:postgresql:9.1-901.jdbc4'
-      //compile 'gov.nasa.horizon:common-api:5.0.0a'
-      //compile 'gov.nasa.horizon:common-api:5.0.0a'
-   }
 
-   plugins {
-      runtime ":hibernate:$grailsVersion"
-      runtime ":jquery:1.8.3"
-      runtime ":resources:1.1.6"
-      runtime ":quartz:1.0"
+    dependencies {
+        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
-      // Uncomment these (or add new ones) to enable additional resources capabilities
-      //runtime ":zipped-resources:1.0"
-      //runtime ":cached-resources:1.0"
-      //runtime ":yui-minify-resources:0.1.5"
+        // runtime 'mysql:mysql-connector-java:5.1.22'
+        compile 'postgresql:postgresql:9.1-901.jdbc4'
+        //compile 'gov.nasa.horizon:common-api:5.0.0a'
+        //compile 'gov.nasa.horizon:common-api:5.0.0a'
+    }
 
-      build ":tomcat:$grailsVersion"
+    plugins {
+        build ":tomcat:7.0.55.3" // or ":tomcat:8.0.22"
 
-      runtime ":database-migration:1.3.2"
+        // plugins for the compile step
+        compile ":scaffolding:2.1.2"
+        compile ':cache:1.1.8'
+        // asset-pipeline 2.0+ requires Java 7, use version 1.9.x with Java 6
+        compile ":asset-pipeline:2.5.7"
 
-      compile ':cache:1.0.1'
-   }
+        // plugins needed at runtime but not for compilation
+        runtime ":hibernate4:4.3.10" // or ":hibernate:3.6.10.18"
+        runtime ":database-migration:1.4.0"
+        runtime ":jquery:1.11.1"
+
+        runtime ":resources:1.2.8"
+        compile ":quartz:1.0.2"
+    }
 }

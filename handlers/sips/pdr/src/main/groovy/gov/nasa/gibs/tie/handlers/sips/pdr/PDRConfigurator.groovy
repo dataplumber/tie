@@ -30,6 +30,7 @@ public class PDRConfigurator extends ApplicationConfigurator {
    private static String PROP_CONFIG_FILE = 'tie.config.file'
    private static String PROP_SCRIPT = 'horizon.user.application'
    private String[] args
+   private String configFile
 
    public PDRConfigurator(String[] args) {
       this.args = args
@@ -53,7 +54,7 @@ public class PDRConfigurator extends ApplicationConfigurator {
       cli.u(args: 1, longOpt: 'user', argName: 'user', 'User name')
       cli.p(args: 1, longOpt: 'pass', argName: 'pass', 'Password')
       cli.n(longOpt: 'non-interactive', argName: 'non-interactive', 'Run in non-interactive mode')
-
+      cli.c(args: 1, longOpt: 'config', argName: 'config', 'tie_producttypes.xml location')
       def options = cli.parse(args)
       if (!options) {
          logger.error('Invalid input parameter(s)')
@@ -109,6 +110,13 @@ public class PDRConfigurator extends ApplicationConfigurator {
             }
          }
       }
+      
+      if (options.c) {
+          this.configFile = options.c
+      }
+      else {
+          this.configFile = System.getProperty(PROP_CONFIG_FILE)
+      }
 
       logger.debug("return result ${result}")
 
@@ -129,8 +137,8 @@ public class PDRConfigurator extends ApplicationConfigurator {
    protected boolean configure() throws DataHandlerException {
       boolean result = false
 
-      logger.debug("Loading product type config from ${System.getProperty(PROP_CONFIG_FILE)}")
-      this.productTypes = this.productTypeFactory.createProductTypes(this, System.getProperty(PROP_CONFIG_FILE))
+      logger.debug("Loading product type config from ${this.configFile}")
+      this.productTypes = this.productTypeFactory.createProductTypes(this, this.configFile)
 
       logger.debug("Done loading product type configuration")
 
@@ -164,8 +172,8 @@ public class PDRConfigurator extends ApplicationConfigurator {
 
       Map<String, ProductType> newProductTypes = null
 
-      logger.debug("Re-loading product type config from ${System.getProperty(PROP_CONFIG_FILE)}")
-      newProductTypes = this.productTypeFactory.createProductTypes(this, System.getProperty(PROP_CONFIG_FILE))
+      logger.debug("Re-loading product type config from ${this.configFile}")
+      newProductTypes = this.productTypeFactory.createProductTypes(this, this.configFile)
 
       logger.debug("Done re-loading product type configuration")
 

@@ -67,6 +67,7 @@ class MLSFileHandler implements FileHandler, FileProductHandler {
          logger.warn("Incomplete product encountered.  Only contains ${fn}")
          return
       }
+	  logger.debug("GIBS-1396 | PT ${productName} passed incomplete file check")
 
       // filter only the files that is within the start/end range
       Date sd = this.productType.startDate.clearTime()
@@ -206,7 +207,7 @@ class MLSFileHandler implements FileHandler, FileProductHandler {
          if (sp != null) {
 
             // write SIP to pending directory
-            String pendingSIP = "${productType.metadataPending}${File.separator}${productName}.xml"
+            String pendingSIP = "${productType.metadataPending}${File.separator}${productName}_${timetag.time}.xml"
             logger.debug("Store SIP in ${pendingSIP}")
 
             new File(pendingSIP).write(sp.toString())

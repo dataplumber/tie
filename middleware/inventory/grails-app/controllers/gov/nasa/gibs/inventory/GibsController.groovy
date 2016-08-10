@@ -41,6 +41,8 @@ class GibsController {
    }
 
    def listImages = {
+       
+       def atime = new Date()
       def pt = inventoryService.selectProductType(params)
       if(!pt) {
          response.status = 404
@@ -49,6 +51,9 @@ class GibsController {
       }
       def policy = ProductTypePolicy.findByPt(pt)
       def imageType = policy.dataFormat
+      
+      def btime = new Date()
+      log.trace("Time to query pt: " + (btime.getTime() - atime.getTime())/1000 + " seconds")
       
       def start, stop
       if(params.startTime != null || params.stopTime != null) {
@@ -68,27 +73,42 @@ class GibsController {
          }
 
          def status = "ONLINE"
-         def productList = Product.findAllByPtAndStatusAndStartTimeBetween(pt, status, start, stop);
+         def productList = Product.findAllByPtAndStatusAndStartTimeBetween(pt, status, start, stop, [fetch: [archive: 'eager']]);
          
-         def imageList = [];
-         def sourceList = [:];
+         def ctime = new Date()
+         log.trace("Time to query products: " + (ctime.getTime() - btime.getTime())/1000 + " seconds")
+         def imageList = []
+         def sourceList = []
          
+         
+//         def productGranuleList = GranuleImagery.findAllByProductInList(productList)
+//         productGranuleList.each { granuleJoin ->
+//            def granule = granuleJoin.granule
+//            def dataset = granule.dataset
+//            def granuleName = granule.remoteGranuleUr
+//            sourceList.add([productType:dataset.shortName, product:granule.remoteGranuleUr, repo: granule.metadataEndpoint])
+//         }
+         
+         def testTime = new Date()
+         
+         def count = 1
          productList.each {product ->
-            def productFile = ProductArchive.findByProductAndType(product, "IMAGE")
-            def productGranuleList = GranuleImagery.findAllByProduct(product)
-            productGranuleList.each { granuleJoin ->
-               def granule = granuleJoin.granule;
-               def dataset = granule.dataset
-               def datasetName = dataset.shortName
-               def granuleName = granule.remoteGranuleUr
-               sourceList."$datasetName-$granuleName" = [productType:dataset.shortName, product:granule.remoteGranuleUr, repo: granule.metadataEndpoint]
-            }
+             
+            def archiveDate = new Date()
+            //def productFile = ProductArchive.findByProductAndType(product, "IMAGE")
+            def productFile = product.archive.find {it.type == "IMAGE"}
+
+            def processDelta = ((new Date().getTime() - archiveDate.getTime())/1000)
+            if (processDelta >= 1)
+                log.trace("Processing product "+count+ " of "+productList.size()+ " Name: "+product.name+" for "+processDelta + " seconds")
+            count++
             def imagePath = product.rootPath + File.separator + product.relPath + File.separator + productFile.name
             imageList.add([path:imagePath, type:imageType])
          }
          
-         println sourceList
-         
+         def dtime = new Date()
+         log.trace("Time to query archive files: " + (dtime.getTime() - ctime.getTime())/1000 + " seconds")
+         log.debug("Total time to query images: " +(new Date().getTime() - atime.getTime())/1000 + " seconds")
          render(contentType:"text/xml"){
             "response" {
                "images" {
@@ -100,7 +120,7 @@ class GibsController {
                   }
                }
                "sources" {
-                  sourceList.each{ key, sourceObj ->
+                  sourceList.each{sourceObj ->
                      "source" {
                         "productType"(sourceObj.productType)
                         "product"(sourceObj.product)

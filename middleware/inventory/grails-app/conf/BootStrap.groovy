@@ -30,7 +30,7 @@ class BootStrap {
             this.config('inventory.bootstrap.smap.xml')
          }
       }
-      quartzScheduler.start()
+      //quartzScheduler.start()
       
    }
    

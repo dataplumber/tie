@@ -269,12 +269,10 @@ class AIRSProductType extends ProductTypeImpl implements Worker, Runnable {
          this.endDate = end
    }
    
-   @Override
    Date getLastRetrievedDate() {
 	   return this.lastRetrievedDate
    }
 
-   @Override
    void setLastRetrievedDate(Date lastRetrievedDate) {
 	   this.lastRetrievedDate = lastRetrievedDate
    }

@@ -154,7 +154,7 @@ class SipsImageryProductType extends ProductTypeImpl implements Worker, Runnable
    }
 
    @Override
-   void cleanup() throws DataHandlerException {
+   void cleanup() {
       if (this.sic) {
          this.sic.shutdown()
       }

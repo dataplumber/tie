@@ -106,6 +106,8 @@ public class Subscriber implements Watcher {
 
       //main program area
       //setLastRunTime();
+      
+      File shutdown = new File("/tmp/subscriber_shutdown");
       do {
           //Reload configuration each run
           _configure();
@@ -173,6 +175,10 @@ public class Subscriber implements Watcher {
             //post productType specific sig events
             _postSigMessages(pt.getIdentifier());
          }
+         if (shutdown.exists()) {
+             _logger.info("Shutdown file found so exiting gracefully.");
+             break;
+          }
 
          if (sleepTime != 0 && daemonFlag) {
             try {
@@ -187,7 +193,9 @@ public class Subscriber implements Watcher {
          }
       } while (daemonFlag);
       //end main program area
-
+      if (shutdown.exists()) {
+         shutdown.delete();
+      }
    }
 
    private void _registerSigEvent() {
@@ -357,7 +365,7 @@ public class Subscriber implements Watcher {
       m_options.addOption("s", "start", true, "The start time for the crawler to use. Defaults to the current time if not specified. Format: yyyy-MM-dd");
       m_options.addOption("e", "end", true, "The end time for the crawler to use. Defaults to the current time if not specified. Format: yyyy-MM-dd");
       m_options.addOption("n", "name", true, "The name for the subscriber instance. Will be used for log file naming.");
-      //m_options.addOption("c", "config", true, "Path the the subscriber configuration file (defaults to ../conf/distribute.config)");
+      m_options.addOption("c", "config", true, "Path the the subscriber configuration file (defaults to ../conf/distribute.config)");
       m_options.addOption("m", "mrf", true, "Path the the subscriber source to mrf lookup file (defaults to ../conf/mrf_config.xml)");
       m_options.addOption("h", "help", false, "Print usage");
    }
@@ -371,9 +379,9 @@ public class Subscriber implements Watcher {
             _printUsage();
             System.exit(0);
          }
-         //if (cl.hasOption("config")) {
-         //   this.configPath = cl.getOptionValue("config");
-         //}
+         if (cl.hasOption("config")) {
+            this.configPath = cl.getOptionValue("config");
+         }
          if(cl.hasOption("mrf")) {
             this.lookupPath = cl.getOptionValue("mrf");
          }

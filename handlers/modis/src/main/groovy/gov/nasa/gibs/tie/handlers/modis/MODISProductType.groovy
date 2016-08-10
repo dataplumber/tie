@@ -241,12 +241,10 @@ class MODISProductType extends ProductTypeImpl implements Worker, Runnable {
          this.endDate = endDate
    }
    
-   @Override
    Date getLastRetrievedDate() {
 	   return this.lastRetrievedDate;
    }
    
-   @Override
    void setLastRetrievedDate(Date lastRetrievedDate) {
 	   this.lastRetrievedDate = lastRetrievedDate;
    }

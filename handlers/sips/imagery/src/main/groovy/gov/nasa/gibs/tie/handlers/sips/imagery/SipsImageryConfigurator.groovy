@@ -30,6 +30,7 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
    private static String PROP_CONFIG_FILE = 'tie.config.file'
    private static String PROP_SCRIPT = 'horizon.user.application'
    private String[] args
+   private String configFile
 
    public SipsImageryConfigurator(String[] args) {
       this.args = args
@@ -50,7 +51,7 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
       cli.s(args: 1, longOpt: 'start', argName: 'startDate', 'start date yyyy-MM-dd')
       cli.e(args: 1, longOpt: 'end', argName: 'endDate', 'end date yyyy-MM-dd')
       cli.r(args: 1, longOpt: 'repo', argName: 'repo', 'local repository directory')
-
+      cli.c(args: 1, longOpt: 'config', argName: 'config', 'tie_producttypes.xml location')
       def options = cli.parse(args)
       if (!options) {
          logger.error('Invalid input parameter(s)')
@@ -80,6 +81,13 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
       if (options.r) {
          this.repo = options.r
       }
+      
+      if (options.c) {
+          this.configFile = options.c
+      }
+      else {
+          this.configFile = System.getProperty(PROP_CONFIG_FILE)
+      }
 
       if (options.h || !result) {
          cli.usage()
@@ -105,9 +113,9 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
    protected boolean configure() throws DataHandlerException {
       boolean result = false
 
-      logger.debug("Loading product type config from ${System.getProperty(PROP_CONFIG_FILE)}")
-      this.productTypes = this.productTypeFactory.createProductTypes(this, System.getProperty(PROP_CONFIG_FILE))
-
+      logger.debug("Loading product type config from ${this.configFile}")
+      this.productTypes = this.productTypeFactory.createProductTypes(this, this.configFile)
+      
       logger.debug("Done loading product type configuration")
 
       this.productTypes.values().each { ProductType pt ->
@@ -145,8 +153,8 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
 
       Map<String, ProductType> newProductTypes = null
 
-      logger.debug("Re-loading product type config from ${System.getProperty(PROP_CONFIG_FILE)}")
-      newProductTypes = this.productTypeFactory.createProductTypes(this, System.getProperty(PROP_CONFIG_FILE))
+      logger.debug("Re-loading product type config from ${this.configFile}")
+      newProductTypes = this.productTypeFactory.createProductTypes(this, this.configFile)
 
       logger.debug("Done re-loading product type configuration")
 

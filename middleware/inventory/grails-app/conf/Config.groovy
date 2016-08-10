@@ -76,11 +76,11 @@ gov.nasa.horizon.security.realm="PODAAC-INVENTORY"
 
 //cache user logins for faster access. Recomended to keep this as true,
 //other wise every request needing auth will query the security service.
-gov.nasa.podaac.auth.cache.useCache = true;
+gov.nasa.horizon.auth.cache.useCache = true;
 
 //hours to cache a user
 //(once successfully cached, requests won't ping the security server until the time limit is up). 0 = infinite cache.
-gov.nasa.podaac.auth.cache.timeLimit = 2
+gov.nasa.horizon.auth.cache.timeLimit = 2
 
 gov.nasa.horizon.log.root = ""
 
@@ -151,6 +151,7 @@ log4j = {
       warn 'stdoutLogger', 'fileLogger'
       info 'stdoutLogger', 'fileLogger'
       debug 'stdoutLogger', 'fileLogger'
+      trace 'stdoutLogger', 'fileLogger'
       
       additivity = true
    }

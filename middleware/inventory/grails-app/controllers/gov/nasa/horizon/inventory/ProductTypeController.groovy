@@ -242,7 +242,8 @@ class ProductTypeController {
       }
       def start = null;
       def stop = null;
-      def pattern = (params.pattern) ? params.pattern : null
+      def pattern = (params.pattern) ? params.pattern : "%"
+      pattern = pattern.replaceAll("#", "%")
       def onlineOnly = false
       if(params.onlineOnly)
          onlineOnly = params.onlineOnly as Boolean
@@ -280,24 +281,24 @@ class ProductTypeController {
          }
          
          if(onlineOnly == false) {
-            productCount = Product.countByPtAndStartTimeBetween(pt, start, stop);
-            productList = Product.findAllByPtAndStartTimeBetween(pt, start, stop, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"]);
+            productCount = Product.countByPtAndStartTimeBetweenAndNameIlike(pt, start, stop, pattern);
+            productList = Product.findAllByPtAndStartTimeBetweenAndNameIlike(pt, start, stop, , pattern, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"]);
          }
          else {
             def status = "ONLINE"
-            productCount = Product.countByPtAndStatusAndStartTimeBetween(pt, status, start, stop);
-            productList = Product.findAllByPtAndStatusAndStartTimeBetween(pt, status, start, stop, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"]);
+            productCount = Product.countByPtAndStatusAndStartTimeBetweenAndNameIlike(pt, status, start, stop, pattern);
+            productList = Product.findAllByPtAndStatusAndStartTimeBetweenAndNameIlike(pt, status, start, stop, pattern, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"]);
          }
       }
       else {
          if(onlineOnly == false) {
-            productCount = Product.countByPt(pt);
-            productList = Product.findAllByPt(pt, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"])
+            productCount = Product.countByPtAndNameIlike(pt, pattern);
+            productList = Product.findAllByPtAndNameIlike(pt, pattern, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"])
          }
          else {
             def status = "ONLINE"
-            productCount = Product.countByPtAndStatus(pt, status);
-            productList = Product.findAllByPtAndStatus(pt, status, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"]);
+            productCount = Product.countByPtAndStatusAndNameIlike(pt, status, pattern);
+            productList = Product.findAllByPtAndStatusAndNameIlike(pt, status, pattern, [max:productPageSize, offset:productPageSize * (page-1), sort:"createTime", order:"desc"]);
          }
       }
 

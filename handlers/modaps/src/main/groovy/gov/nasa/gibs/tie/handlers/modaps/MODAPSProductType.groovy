@@ -269,22 +269,18 @@ class MODAPSProductType extends ProductTypeImpl implements Worker, Runnable {
 			this.endDate = end
 	}
 
-	@Override
 	Date getLastRetrievedDate() {
 		return this.lastRetrievedDate;
 	}
 
-	@Override
 	void setLastRetrievedDate(Date lastRetrievedDate) {
 		this.lastRetrievedDate = lastRetrievedDate;
 	}
 
-	@Override
 	String getPartialIdPrefix() {
 		return this.partialIdPrefix
 	}
 
-	@Override
 	void setPartialIdPrefix(String prefix) {
 		this.partialIdPrefix = prefix
 	}

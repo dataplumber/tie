@@ -14,6 +14,8 @@ import gov.nasa.gibs.tie.handlers.common.CacheFileInfo
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import java.text.DecimalFormat
+import java.awt.Image
+import javax.imageio.ImageIO
 
 /**
  * CMR file handler class
@@ -102,27 +104,38 @@ class CMRFileHandler implements FileHandler {
 					}
 				} else {
 					File sf = new File(shadowLocation)
-					if (!sf.text.contains('PNG')) {
+					if (!sf.path.toLowerCase().endsWith('png')) {
 						logger.debug("No image file found at this time.")
 						sf.delete()
 					} else {
-						fileProduct.digestValue = checksum
-						fileProduct.size = sf.size()
-						CacheFileInfo cfi = new CacheFileInfo()
-						cfi.product = productName
-						cfi.name = fileProduct.name
-						cfi.modified = fileProduct.lastModifiedTime
-						cfi.size = fileProduct.size
-						if (productType.isInCache(cfi)) {
-							logger.debug("File already previously downloaded.  Delete and skip it")
-							sf.delete()
-						} else {
-							product.addFileProduct(fileProduct)
-
-							// download success
-							logger.debug("Retrieved file: ${fileProduct.name}")
+						try {
+							Image image = ImageIO.read(sf);
+							
+							if (image == null) {
+								logger.debug("The downlaoded file was not an image. Skip it.");
+								sf.delete()
+							} else {
+								fileProduct.digestValue = checksum
+								fileProduct.size = sf.size()
+								CacheFileInfo cfi = new CacheFileInfo()
+								cfi.product = productName
+								cfi.name = fileProduct.name
+								cfi.modified = fileProduct.lastModifiedTime
+								cfi.size = fileProduct.size
+								if (productType.isInCache(cfi)) {
+									logger.debug("File already previously downloaded.  Delete and skip it")
+									sf.delete()
+								} else {
+									product.addFileProduct(fileProduct)
+		
+									// download success
+									logger.debug("Retrieved file: ${fileProduct.name}")
+								}
+								break
+							}
+						} catch(IOException ex) {
+							logger.info("poop");
 						}
-						break
 					}
 					++retries
 				}
@@ -135,7 +148,7 @@ class CMRFileHandler implements FileHandler {
 		// listed in cache
 		def inCache = true
 		for (FileProduct fp in product.files) {
-			logger.debug("Checking file ${fp.name} in cache.")
+			//logger.debug("Checking file ${fp.name} in cache.")
 			CacheFileInfo cfi = new CacheFileInfo()
 			cfi.product = productName
 			cfi.name = fp.name
@@ -206,7 +219,7 @@ class CMRFileHandler implements FileHandler {
 
 				// update cache
 				for (FileProduct fp in product.files) {
-					logger.debug("Checking file ${fp.name} in cache.")
+					//logger.debug("Checking file ${fp.name} in cache.")
 					CacheFileInfo cfi = new CacheFileInfo()
 					cfi.product = productName
 					cfi.name = fp.name
@@ -215,7 +228,7 @@ class CMRFileHandler implements FileHandler {
 					cfi.checksumAlgorithm = fp.digestAlgorithm.toString()
 					cfi.checksumValue = fp.digestValue
 					if (productType.updateCache(cfi, this.granuleId)) {
-						logger.debug("${productType.name}:${cfi.name} has been added to cache.")
+						logger.debug("Product:file ${productType.name}:${cfi.name} updated in cache for granuleID ${this.granuleId}.")
 					}
 				}
 

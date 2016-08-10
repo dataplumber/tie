@@ -13,6 +13,8 @@ import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
 import java.text.SimpleDateFormat
+import java.util.regex.Pattern
+import java.util.regex.Matcher
 
 /**
  * Implementation of Metadata Harvester for the SipsImagery imagery products
@@ -163,7 +165,7 @@ class SipsImageryMetadata implements MetadataHarvester {
 				if (processingDatetime) {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 					sdf.timeZone = TimeZone.getTimeZone("UTC")
-					header.setCreateTime(sdf.parse(processingDatetime.VALUE as String))
+					header.setCreateTime(sdf.parse( formatTimeString(processingDatetime.VALUE as String) ))
 				}
 			} catch(Exception e) {
 				throw new ServiceProfileException("Invalid metadata: BOUNDINGRECTANGLE | metadata file location: ${metFileLoc}")
@@ -182,7 +184,7 @@ class SipsImageryMetadata implements MetadataHarvester {
 					sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 					if (rangeBeginningDate) {
 						String btime = (rangeBeginningTime.VALUE as String)
-						Date d = sdf.parse("${rangeBeginningDate.VALUE as String} ${btime}")
+						Date d = sdf.parse( formatTimeString("${rangeBeginningDate.VALUE as String} ${btime}") )
 						//d.clearTime()
 						metadata.setProductStartTime(d.time)
 						logger.debug("Product start time ${d}")
@@ -192,7 +194,7 @@ class SipsImageryMetadata implements MetadataHarvester {
 					def rangeEndingTime = rangeDatetime.OBJECT.find {it.OBJECT_NAME == 'RANGEENDINGTIME'}
 					if (rangeEndingDate) {
 						String etime = (rangeEndingTime.VALUE as String)
-						Date d = sdf.parse("${rangeEndingDate.VALUE as String}  ${etime}") //${(rangeEndingTime.VALUE as String).replaceAll('z$', '+0000')}")
+						Date d = sdf.parse( formatTimeString("${rangeEndingDate.VALUE as String}  ${etime}") ) //${(rangeEndingTime.VALUE as String).replaceAll('z$', '+0000')}")
 						//d.clearTime()
 						metadata.setProductStopTime(d.time)
 						logger.debug("Product stop time ${d}")
@@ -404,5 +406,27 @@ class SipsImageryMetadata implements MetadataHarvester {
 			logger.info(result.toString())
 		}
 		return result
+	}
+	
+	/*
+	 * Timestamps parsed from the XML metadata file can have any arbitrary number of decimal seconds.
+	 * We wish to truncate or pad the string so that all timestamps have 3 digits after the decimal.
+	 * (GIBS-1283)
+	 */
+	public String formatTimeString(String timeString) {
+		Pattern pattern = Pattern.compile("(?<=\\.)(\\d+)(?=Z)")
+		Matcher matcher = pattern.matcher(timeString)
+		
+		if(matcher.find()) {
+			def decimalSeconds = matcher.group()
+			
+			String formattedDecimalSeconds = String.format("%03d", Integer.parseInt(decimalSeconds))
+			formattedDecimalSeconds = String.format("%3.3s", formattedDecimalSeconds)
+			
+			timeString = matcher.replaceFirst(formattedDecimalSeconds)
+		} else {
+				timeString = timeString.replace("Z", ".000Z")
+		}
+		return timeString
 	}
 }

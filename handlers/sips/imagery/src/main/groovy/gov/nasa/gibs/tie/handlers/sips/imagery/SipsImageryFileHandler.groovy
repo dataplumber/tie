@@ -133,7 +133,8 @@ class SipsImageryFileHandler implements FileHandler, FileProductHandler {
             return
          }
 
-         String location = "${productType.dataStorage}${File.separator}${productName}${File.separator}"
+		 Date timetag = new Date()
+         String location = "${productType.dataStorage}${File.separator}${productName}_${timetag.time}${File.separator}"
          String shadow = "${productType.dataStorage}${File.separator}.shadow${File.separator}${productName}${File.separator}"
 
          // download to a shadow directory to prevent partial read by any scanners
@@ -227,7 +228,7 @@ class SipsImageryFileHandler implements FileHandler, FileProductHandler {
             if (sp != null) {
 
                // write SIP to pending directory
-               String pendingSIP = "${productType.metadataPending}${File.separator}${productName}.xml"
+               String pendingSIP = "${productType.metadataPending}${File.separator}${productName}_${timetag.time}.xml"
                logger.debug("Store SIP in ${pendingSIP}")
 
                new File(pendingSIP).write(sp.toString())

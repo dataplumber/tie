@@ -5,7 +5,7 @@
       <sigevent>http://localhost:8100/sigevent/</sigevent>
       <productType>
          <name>OMI_SO2_PBL_STD_SRC</name>
-         <collection>C194770326-GSFCS4PA</collection>
+         <collection>C1266136112-GES_DISC</collection>
          <interval>60</interval>
          <cmrURL>http://cmr.earthdata.nasa.gov/search/granules.json?concept_id&#91;&#93;=${collectionId}&amp;page_size=${pageSize}</cmrURL>
          <cmrPageSize>10</cmrPageSize>

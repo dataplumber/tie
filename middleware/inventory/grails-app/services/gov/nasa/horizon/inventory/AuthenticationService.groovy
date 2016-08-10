@@ -39,7 +39,7 @@ class AuthenticationService {
       //return true
 
       def useCache = (boolean)grailsApplication.config.gov.nasa.horizon.auth.cache.useCache
-      def limit = (Integer)grailsApplication.config.gov.nasa.horizon.auth.cache.timeLimit = 2
+      def limit = (Integer)grailsApplication.config.gov.nasa.horizon.auth.cache.timeLimit
 
       log.debug("Authenticating...")
       def start = new Date().getTime();

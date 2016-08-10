@@ -1,9 +1,8 @@
-dataSource {
-   pooled = true
-   driverClassName = "org.h2.Driver"
-   username = "sa"
-   password = ''
-}
+/*
+ * Copyright (c) 2013 Jet Propulsion Laboratory,
+ * California Institute of Technology.  All rights reserved
+ */
+
 hibernate {
    cache.use_second_level_cache = true
    cache.use_query_cache = false
@@ -13,6 +12,7 @@ hibernate {
 environments {
    development {
       dataSource {
+         pooled = true
          dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
          //url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
          driverClassName = "org.postgresql.Driver"

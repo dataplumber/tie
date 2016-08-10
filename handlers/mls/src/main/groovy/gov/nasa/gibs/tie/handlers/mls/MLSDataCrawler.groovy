@@ -29,7 +29,7 @@ class MLSDataCrawler extends TimerTask {
    private MLSProductType productType
 
    // timeout value in seconds
-   private int timeout = 20
+   private int timeout = 30
 
    /**
     * Constructor to create a single service thread in the background

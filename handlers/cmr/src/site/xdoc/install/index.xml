@@ -16,7 +16,7 @@
             following sections can be found in this document:</p>
          <ul>
             <li><a href="#Distribution_Contents">Distribution Contents</a></li>
-            <li><a href="#handler_Configuration">handler Configuration</a></li>
+            <li><a href="#Handler_Configuration">Handler Configuration</a></li>
          </ul>
       </section>
       <section name="Distribution Contents" id="Distribution_Contents">
@@ -47,7 +47,7 @@
             <li><i>useHORIZON.csh</i> - the file is a script for setting up the environment.</li>
          </ul>
       </section>
-      <section name="handler Configuration" id="handler_Configuration">
+      <section name="Handler Configuration" id="Handler_Configuration">
          <subsection name="Regarding the useHORIZON.csh script">
             <p>The <i>useHORIZON.csh</i> is a environment setting script. </p>
             <source>
@@ -154,11 +154,17 @@ setenv PATH ${HORIZON}/../bin:${PATH}
    &lt;productTypes&gt;
       &lt;sigevent&gt;http://localhost:8100/sigevent/&lt;/sigevent&gt;
       &lt;productType&gt;
-         &lt;name&gt;C194770326-GSFCS4PA&lt;/name&gt;
-         &lt;interval&gt;60&lt;/interval&gt;
+         &lt;name&gt;OMI_SO2_PBL_STD_SRC&lt;/name&gt;
+         &lt;collection&gt;C194770326-GSFCS4PA&lt;/collection&gt;
          &lt;cmrURL&gt;http://cmr.earthdata.nasa.gov/search/granules.json?concept_id&#91;&#93;=${collectionId}&amp;page_size=${pageSize}&lt;/cmrURL&gt;
          &lt;cmrPageSize&gt;10&lt;/cmrPageSize&gt;
          &lt;wmsURL&gt;http://giovanni.gsfc.nasa.gov/giovanni/daac-bin/wms_ag4?version=1.1.1&amp;service=WMS&amp;request=GetMap&amp;SRS=EPSG:4326&amp;WIDTH=${width}&amp;HEIGHT=${height}&amp;TRANSPARENT=TRUE&amp;FORMAT=image/png&amp;bbox=${bbox}&amp;LAYERS=${layer}&amp;time=${time}&amp;sld=http://dev.gesdisc.eosdis.nasa.gov/giovanni/sld/fixed/fixed_water_vapor_sld.xml&lt;/wmsURL&gt;
+         &lt;layer&gt;Time-Averaged.OMSO2e_003_ColumnAmountSO2_PBL&lt;/layer&gt;
+         &lt;dateTimeFormat&gt;yyyy-MM-dd'T'hh:mm:ss'Z'&lt;/dateTimeFormat&gt;
+         &lt;colormapParam&gt;
+            &lt;type&gt;sld&lt;/type&gt;
+            &lt;value&gt;http://map1.vis.earthdata.nasa.gov/sld/OMI_SO2_Planetary_Boundary_Layer.sld&lt;/value&gt;
+         &lt;/colormapParam&gt; 
          &lt;bbox&gt;
             &lt;left_lon&gt;-180&lt;/left_lon&gt;
             &lt;lower_lat&gt;-90&lt;/lower_lat&gt;

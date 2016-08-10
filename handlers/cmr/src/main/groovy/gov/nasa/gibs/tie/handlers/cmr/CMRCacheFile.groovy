@@ -71,7 +71,7 @@ class CMRCacheFile {
 			lastRetrieved(this.lastRetrieved)
 			retrieveddataids() {
 				retrievedDataIds.each { currId ->
-					_logger.debug("writing granuleID to cache file: ${currId}")
+					//_logger.debug("writing granuleID to cache file: ${currId}")
 					id(currId)	
 				}
 			}

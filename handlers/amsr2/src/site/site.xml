@@ -10,7 +10,7 @@ $Id: $
 <project xmlns="http://maven.apache.org/DECORATION/1.4.0"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd"
-   name="OMI Imagery Handler Module">
+   name="AMSR2 Imagery Handler Module">
 
    <bannerLeft>
       <src>images/gibs_logo.jpg</src>
@@ -18,15 +18,15 @@ $Id: $
    </bannerLeft>
 
    <bannerRight>
-      <name>OMI Data Handlers Program Set</name>
+      <name>AMSR2 Data Handlers Program Set</name>
    </bannerRight>
 
    <body>
       <links>
-         <item name="OMI" href="http://horizon.jpl.nasa.gov/tie/handlers/omi/index.html"/>
+         <item name="AMSR2" href="http://horizon.jpl.nasa.gov/tie/handlers/amsr2/index.html"/>
       </links>
       <menu name="Software Documentation">
-         <item name="About OMI" href="index.html"/>
+         <item name="About AMSR2" href="index.html"/>
          <item name="Installation" href="install/index.html"/>
          <item name="Operation" href="operate/index.html"/>
       </menu>

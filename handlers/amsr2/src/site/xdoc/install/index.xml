@@ -23,11 +23,11 @@
          <p>This release of the gov.nasa.gibs.tie.handlers.amsr2.AMSR2 Data Handler requires Java Standard Edition 1.7 or higher. The
             handler is shipped in a self-contained TAR/ZIP file. Below is an illustration of the
             handler distribution after it has been expanded:</p>
-         <img src="../images/sftp_handler_distribution.jpg" alt=""/>
+         <img src="../images/amsr2_handler_distribution.jpg" alt=""/>
          <ul>
             <li><i>bin</i> - this directory contains handler executables. The current release has a
                single executable.<ul>
-                  <li><i>sftp</i> - this single command initiates discovery and ingestion of new
+                  <li><i>amsr2</i> - this single command initiates discovery and ingestion of new
                      imagery product from the provider server.</li>
                </ul></li>
             <li><i>config</i> - this directory contains handler/server configuration information.<ul>
