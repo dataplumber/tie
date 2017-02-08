@@ -4,11 +4,14 @@
  *****************************************************************************/
 package gov.nasa.gibs.tie.handlers.sips.pdr
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import gov.nasa.gibs.tie.handlers.common.TarGzipUtil
 import gov.nasa.gibs.tie.handlers.sips.common.PdrSlurper
 import gov.nasa.horizon.common.api.file.FileProduct
 import gov.nasa.horizon.common.api.util.FileProductUtility
 import gov.nasa.horizon.common.api.util.URIPath
+import gov.nasa.gibs.tie.handlers.sips.pdr.PDRErrorUtility
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
@@ -38,24 +41,88 @@ class PDRProcessor {
       this.hostURI = URIPath.createURIPath(this.sipsProductType.sourceURL).hostURI
       pdr = new PdrSlurper().parseText(new File(this.pdrFile).text)
    }
+   
+   boolean validateFileGroup(PDRErrorUtility.ProductJob pj) {  
+	   pj.valid = false
+	   PDRErrorUtility.PDRDLongDisposition disposition
+	   
+	   if( pj.productType == null || pj.productType.equals("") || pj.productVersion == null || pj.productVersion.equals("") ) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.DATA_TYPE
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }
+	   else if(pj.directory == null || pj.directory.equals("")) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.DIRECTORY
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }
+	   else if(pj.fileSize == null || pj.fileSize == 0) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.FILE_SIZE
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }
+	   else if(pj.productName == null || pj.productName.equals("")) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.FILE_ID
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }
+	   else if(pj.fileType == null || pj.fileType.equals("") || !pj.fileType.equals("TGZ")) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.FILE_TYPE
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }
+	   else if(pj.checksumType == null || pj.checksumType.equals("")) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.MISSING_CKSUM_TYPE
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }
+	   else if(pj.checksum == null || pj.checksum.equals("")) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.MISSING_CKSUM_VALUE
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   } 
+	   else if(pj.checksumType.equals("MD5")) {
+			Pattern p = Pattern.compile("[0-9a-f]{32}")
+			Matcher m = p.matcher(pj.checksum)
 
-   class ProductJob {
-      PDRProductType sipsProductType
-      String pdrProductType
-      String productType
-      String productName
-      String directory
-      String fileName
-      String fileURL
-      long fileSize
-      //int crc32
-      String checksum
-
-      Boolean success
-      String disposition
+			if(m.matches()) {
+				PDRErrorUtility.PDRDLongDisposition d = PDRErrorUtility.PDRDLongDisposition.SUCCESS
+				pj.dispositionPDRD = d.toString()
+				PDRErrorUtility.PANLongDisposition d2 = PDRErrorUtility.PANLongDisposition.SUCCESS
+				pj.dispositionPAN = d2.toString()
+				pj.valid = true
+				return true
+			} else {
+				disposition = PDRErrorUtility.PDRDLongDisposition.INVALID_CKSUM_VALUE
+				pj.dispositionPDRD = disposition.toString()
+				return false
+			}
+		}
+	   else if(pj.checksumType.equals("SHA1")) {
+		   Pattern p = Pattern.compile("[0-9a-f]{40}")
+		   Matcher m = p.matcher(pj.checksum)
+		   
+			if(m.matches()) {
+				PDRErrorUtility.PDRDLongDisposition d = PDRErrorUtility.PDRDLongDisposition.SUCCESS
+				pj.dispositionPDRD = d.toString()
+				PDRErrorUtility.PANLongDisposition d2 = PDRErrorUtility.PANLongDisposition.SUCCESS
+				pj.dispositionPAN = d2.toString()
+				pj.valid = true
+				return true
+			} else {
+				disposition = PDRErrorUtility.PDRDLongDisposition.INVALID_CKSUM_VALUE
+				pj.dispositionPDRD = disposition.toString()
+				return false
+			}
+	   }
+	   else if(!pj.checksumType.equals("MD5") && !pj.checksumType.equals("SHA1")) {
+		   disposition = PDRErrorUtility.PDRDLongDisposition.UNSUPPORTED_CKSUM_TYPE
+		   pj.dispositionPDRD = disposition.toString()
+		   return false
+	   }   
    }
 
-   def ingest = { ProductJob pj ->
+   def ingest = { PDRErrorUtility.ProductJob pj ->
       logger.debug("inside ingest closure")
       def productTypeRoot = "${pj.sipsProductType.dataStorageRoot}${File.separator}${pj.productType}"
       def ptroot = new File(productTypeRoot)
@@ -74,8 +141,8 @@ class PDRProcessor {
       }
 
       if (!fpu.verifyFileExistence()) {
-         pj.disposition = "\"FILE ${pj.fileURL} NOT EXISTS\""
-         logger.error pj.disposition
+         pj.dispositionPAN = "\"FILE ${pj.fileURL} NOT EXISTS\""
+         logger.error pj.dispositionPAN
          new File(shadow).deleteDir()
          pj.success = false
          return
@@ -87,8 +154,8 @@ class PDRProcessor {
       try {
          new File("${shadow}${File.separator}${pj.fileName}") << fileProduct.inputStream
       } catch (Exception e) {
-         pj.disposition = "\"FAILED TO DOWNLOAD FILE ${pj.fileURL}\""
-         logger.error pj.disposition
+         pj.dispositionPAN = "\"FAILED TO DOWNLOAD FILE ${pj.fileURL}\""
+         logger.error pj.dispositionPAN
          new File(shadow).deleteDir()
          pj.success = false
          return
@@ -115,101 +182,103 @@ class PDRProcessor {
             unzipped.delete()
          }
       } catch (Exception e) {
-         pj.disposition = "\"FAILED TO OPEN FILE ${pj.fileName}\""
-         logger.debug(pj.disposition)
+         pj.dispositionPAN = "\"FAILED TO OPEN FILE ${pj.fileName}\""
+         logger.debug(pj.dispositionPAN)
          new File(shadow).deleteDir()
          pj.success = false
       }
 
       new File(shadow).renameTo(new File(destination))
-      pj.disposition = '"SUCCESSFUL"'
+      pj.dispositionPAN = '"SUCCESSFUL"'
       pj.success = true
    }
 
    public void run() {
-      this.expFileCount = this.pdr.TOTAL_FILE_COUNT.toInteger()
-      def jobs = []
-      pdr.OBJECT.each { group ->
-         if (group.OBJECT_NAME == 'FILE_GROUP') {
-            //String pt = group.DATA_TYPE
-            group.OBJECT.each { spec ->
-               if (spec.OBJECT_NAME == 'FILE_SPEC') {
-                  ProductJob pj = new ProductJob()
-                  pj.sipsProductType = this.sipsProductType
-                  pj.pdrProductType = this.pdrProductType
-                  String fn = spec.FILE_ID
-                  pj.productName = fn.substring(0, fn.lastIndexOf('.tar.gz'))
-                  pj.productType = group.DATA_TYPE
-                  pj.directory = spec.DIRECTORY_ID
-                  pj.fileName = spec.FILE_ID
-                  pj.fileSize = spec.FILE_SIZE.toLong()
-                  //pj.crc32 = spec.FILE_CKSUM_VALUE.toLong()
-                  pj.checksum = spec.FILE_CKSUM_VALUE
+	  if( this.pdr.TOTAL_FILE_COUNT != null && !this.pdr.TOTAL_FILE_COUNT.equals("") ) {
+			this.expFileCount = this.pdr.TOTAL_FILE_COUNT.toInteger()  
+	  }
+	  if(this.expFileCount < 1) { // If PDR fails TOTAL_FILE_COUNT validation, skip all other logic
+		  //TODO SigEvent
+		  PDRErrorUtility.writePDRDShortFile(this.sipsProductType, this.pdrProductType, PDRErrorUtility.PDRDShortDisposition.FILE_COUNT)
+	  } 
+		else {
+			int invalidFileGroups = 0
+			def jobs = []
+			pdr.OBJECT.each { group ->
+				if (group.OBJECT_NAME == 'FILE_GROUP') {
+					//String pt = group.DATA_TYPE
+					group.OBJECT.each { spec ->
+						if (spec.OBJECT_NAME == 'FILE_SPEC') {
+							PDRErrorUtility.ProductJob pj = new PDRErrorUtility.ProductJob()
+							pj.sipsProductType = this.sipsProductType
+							pj.pdrProductType = this.pdrProductType
+							pj.productType = group.DATA_TYPE
+							pj.productVersion = group.DATA_VERSION
+							pj.directory = spec.DIRECTORY_ID
 
-                  if (hostURI == null) {
-                     URI baseURI = new URI(this.sipsProductType.sourceURL)
-                     hostURI = "${baseURI.getScheme()}://${baseURI.getHost()}"
-                  }
-                  pj.fileURL = "${hostURI}${File.separator}${spec.DIRECTORY_ID}${File.separator}${spec.FILE_ID}"
+							if(spec.FILE_ID == null || spec.FILE_ID.equals("")) {
+								pj.productName = ""
+							} else {
+								String fn = spec.FILE_ID
+								pj.fileName = fn
+								pj.productName = fn.substring(0, fn.lastIndexOf('.tar.gz'))
+							}
+							pj.fileType = spec.FILE_TYPE
 
-                  jobs << pj
-                  this.sipsProductType.ingestPool.execute("${pj.productType}:${pj.productName}") {
-                     this.ingest(pj)
-                  }
-               }
-            }
-         }
-      }
+							if(spec.FILE_SIZE == null || spec.FILE_SIZE.equals("")) {
+								pj.fileSize = 0
+							} else {
+								pj.fileSize = spec.FILE_SIZE.toLong()
+							}
+							pj.checksumType = spec.FILE_CKSUM_TYPE
+							//pj.crc32 = spec.FILE_CKSUM_VALUE.toLong()
+							pj.checksum = spec.FILE_CKSUM_VALUE
 
-      logger.debug "check while loop"
-      while (jobs.count { it.success == null } != 0) {
-         try {
-            Thread.sleep(1000)
-            if (logger.debugEnabled) {
-               jobs.each { ProductJob p ->
-                  logger.trace("${p.productType}:${p.productName} status=${p.success}")
-               }
-            }
-         } catch (InterruptedException e) {
-            logger.error(e.message, e)
-         }
-      }
+							if (hostURI == null) {
+								URI baseURI = new URI(this.sipsProductType.sourceURL)
+								hostURI = "${baseURI.getScheme()}://${baseURI.getHost()}"
+							}
+							pj.fileURL = "${hostURI}${File.separator}${spec.DIRECTORY_ID}${File.separator}${spec.FILE_ID}"
 
-      logger.debug "Shutting down workers"
-      this.fileCount = jobs.count { it.success == true }
-      if (fileCount != this.expFileCount) {
-         logger.error("Expecting ${this.expFileCount} files, but only received ${fileCount} files.")
-      }
+							boolean fileGroupValid = this.validateFileGroup(pj)
+							jobs << pj
 
-      // log a PAN file
-      if (!this.sipsProductType.panURL) {
-         logger.warn("PAN URL is not specified.  A PAN file will not be logged.  Please inform the data provider.")
-         return
-      }
-      FileProductUtility pan = new FileProductUtility("${this.sipsProductType.panURL}${File.separator}${this.pdrProductType}.PAN")
-      if (this.sipsProductType.user) {
-         pan.setAuthentication(this.sipsProductType.user, this.sipsProductType.pass)
-      }
-      StringBuffer sb = new StringBuffer()
-      sb.append('MESSAGE_TYPE = LONGPAN;\n')
-      sb.append("NO_OF_FILES = ${jobs.size()};\n")
-      jobs.each { ProductJob job ->
-         sb.append("FILE_DIRECTORY = ${job.directory};\n")
-         sb.append("FILE_NAME = ${job.fileName};\n")
-         sb.append("DISPOSITION = ${job.disposition};\n")
-         sb.append("TIME_STAMP = ;\n\n")
-      }
+							if(fileGroupValid) {
+								this.sipsProductType.ingestPool.execute("${pj.productType}:${pj.productName}") {
 
-      logger.debug("Writing to remote PAN file...")
-      logger.debug(sb.toString())
-
-      try {
-         pan.writeFile(new ByteArrayInputStream(sb.toString().bytes))
-      } catch (Exception e) {
-         logger.error("Unable to write PAN to to the specified destination: ${this.sipsProductType.panURL}.  A PAN file will not be logged.  Please inform the data provider.")
-      } finally {
-         pan.cleanUp()
-      }
-      logger.debug("Done handling remote PAN file.")
+									this.ingest(pj)
+								}
+							} else {
+								this.expFileCount--
+								invalidFileGroups++
+							}
+						}
+					}
+				}
+			}
+		  
+	      logger.debug "check while loop"
+	      while (jobs.count { it.valid == null && it.success == null } != 0) {
+	         try {
+	            Thread.sleep(1000)
+	            if (logger.debugEnabled) {
+	               jobs.each { PDRErrorUtility.ProductJob p ->
+	                  logger.trace("${p.productType}:${p.productName} status=${p.success}")
+	               }
+	            }
+	         } catch (InterruptedException e) {
+	            logger.error(e.message, e)
+	         }
+	      }
+	
+	      logger.debug "Shutting down workers"
+	      this.fileCount = jobs.count { it.success == true }
+	      if (fileCount != this.expFileCount) {
+	         logger.error("Expecting ${this.expFileCount} files, but only received ${fileCount} files.")
+	      }
+	
+	      //Call PDRD / PAN function
+		 PDRErrorUtility.writeLongPdrdOrPanFile(this.sipsProductType, jobs)
+	   }
    }
 }

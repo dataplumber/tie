@@ -38,11 +38,13 @@ class SipsImageryProductTypeFactory implements ProductTypeFactory {
          pts.productTypes.each { def productTypes ->
             String sigevent = productTypes.sigevent
             int interval = (productTypes.interval).toInteger()
+			int cacheRetention = (productTypes.cacheRetention).toInteger()
             productTypes.productType.each { productType ->
 
                if(!configurator.productTypes.containsKey(productType.name.toString())) {
                    SipsImageryProductType pt = new SipsImageryProductType(productType.name.toString())
     
+				   pt.cacheRetention = cacheRetention
                    pt.configurator = configurator
     
                    log.debug("Done initial configuration.  Set attributes")

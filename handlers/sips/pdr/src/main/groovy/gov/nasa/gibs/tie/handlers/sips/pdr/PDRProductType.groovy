@@ -13,6 +13,7 @@ import gov.nasa.horizon.handlers.framework.*
 import groovy.transform.ToString
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
+import org.apache.commons.lang.time.DateUtils
 
 //import java.util.concurrent.Executors
 //import java.util.concurrent.ScheduledExecutorService
@@ -31,6 +32,7 @@ class PDRProductType extends ProductTypeImpl implements Worker, Runnable {
 
    final String name
    int interval = 0
+   int cacheRetention
    String sigEventURL
    String sourceURL
    String panURL
@@ -91,6 +93,15 @@ class PDRProductType extends ProductTypeImpl implements Worker, Runnable {
 
 
    void run() {
+	   Date lastCachePurge
+	   //Ensure cache is purged of old entries at least once per day
+	   Date now = new Date()
+	   if( this.cache && ( lastCachePurge == null || lastCachePurge < DateUtils.addDays(now, -1)) ) {
+		   lastCachePurge = now
+		   _logger.trace("Purging expired cache entries from ${workspace.getLocation(Workspace.Location.CACHE)}${File.separator}${name}.cache.xml")
+		   this.cache = CacheFileInfo.load("${workspace.getLocation(Workspace.Location.CACHE)}${File.separator}${name}.cache.xml", cacheRetention)
+	   }
+	   
       // do the work
       _logger.debug("Product Type ${this.name}: run method")
       crawlerPool.execute("${new Date().time}@${sourceURL}") {
@@ -104,8 +115,7 @@ class PDRProductType extends ProductTypeImpl implements Worker, Runnable {
          crawler.crawl()
          crawler.stop()
       }
-      if (!batch)
-         endDate = null
+	  endDate = null
 
       if (new File("/tmp/sips_pdr_shutdown").exists()) {
          //this.pool.shutdown()
@@ -147,12 +157,8 @@ class PDRProductType extends ProductTypeImpl implements Worker, Runnable {
 
    @Override
    void work() throws DataHandlerException {
-      //this.run()
       _logger.debug("Product Type ${this.name} scheduled every ${this.interval} sec")
-      //if (!this.batch)
-      //   this.pool.scheduleWithFixedDelay(this, 0, this.interval, TimeUnit.SECONDS)
-      //else
-         this.run()
+	  this.run()
    }
 
    @Override

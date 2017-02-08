@@ -85,7 +85,7 @@
     <!-- setup log4j's root logger -->
     <!--                           -->
     <root>
-        <level value="DEBUG"/>
+        <level value="INFO"/>
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="STDERR"/>

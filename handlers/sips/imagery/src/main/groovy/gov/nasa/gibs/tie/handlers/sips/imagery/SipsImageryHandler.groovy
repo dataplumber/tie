@@ -15,7 +15,6 @@ public class SipsImageryHandler implements Worker {
 
    SipsImageryConfigurator config
    boolean error = false
-   boolean batch = false
 
    public SipsImageryHandler(String[] args) {
       logger.debug("SipsImageryHandler creating configurator")
@@ -55,8 +54,6 @@ public class SipsImageryHandler implements Worker {
          return
       }
       this.config.productTypes.each { name, pt ->
-         if (pt.batch) this.batch = true
-
          if (pt.ready) {
             logger.debug("Product Type: ${name} started...")
             pt.work()
@@ -80,25 +77,23 @@ public class SipsImageryHandler implements Worker {
       File shutdown = new File("/tmp/sips_imagery_shutdown")
       logger.debug("handler.hasError() = ${handler.hasError()}")
       if (!handler.hasError()) {
-         if (!handler.batch) {
-            while (true) {
+        while (true) {
 
-               try {
-                  Thread.sleep(10000);
-               } catch (InterruptedException e) {
-                  e.printStackTrace();
-               }
+           try {
+              Thread.sleep(10000);
+           } catch (InterruptedException e) {
+              e.printStackTrace();
+           }
 
-               //Reload config file for new product type entries
-               handler.config.reloadConfig()
-               
-               // checking for shutdown file
-               if (shutdown.exists()) {
-                  break
-               }
-
-            }
-         }
+           //Reload config file for new product type entries
+           handler.config.reloadConfig()
+           
+           // checking for shutdown file
+           if (shutdown.exists()) {
+              break
+           }
+        }
+         
       }
 
       logger.info("SipsImagery Handler shutting down...")

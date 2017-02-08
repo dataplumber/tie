@@ -125,9 +125,10 @@ class SipsImageryFileHandler implements FileHandler, FileProductHandler {
                inCache = false
                break
             }
-            names << fp.name         
+            names << fp.name 
          }
 
+		 
          if (inCache) {
             logger.debug ("Files [${names}] already in cache... skipping.")
             return

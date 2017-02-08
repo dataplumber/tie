@@ -32,6 +32,8 @@ public class PDRConfigurator extends ApplicationConfigurator {
    private String[] args
    private String configFile
 
+   private String[] filteredProductTypes
+
    public PDRConfigurator(String[] args) {
       this.args = args
       this.hasError = !this._parseArgs(args)
@@ -51,10 +53,12 @@ public class PDRConfigurator extends ApplicationConfigurator {
       cli.s(args: 1, longOpt: 'start', argName: 'startDate', 'start date yyyy-MM-dd')
       cli.e(args: 1, longOpt: 'end', argName: 'endDate', 'end date yyyy-MM-dd')
       cli.r(args: 1, longOpt: 'repo', argName: 'repo', 'local repository directory')
-      cli.u(args: 1, longOpt: 'user', argName: 'user', 'User name')
-      cli.p(args: 1, longOpt: 'pass', argName: 'pass', 'Password')
+      cli.U(args: 1, longOpt: 'user', argName: 'user', 'User name')
+      cli.P(args: 1, longOpt: 'pass', argName: 'pass', 'Password')
       cli.n(longOpt: 'non-interactive', argName: 'non-interactive', 'Run in non-interactive mode')
       cli.c(args: 1, longOpt: 'config', argName: 'config', 'tie_producttypes.xml location')
+      cli.p(args: 1, longOpt: 'productTypes', argName: 'productType', 'list of product types to process')
+
       def options = cli.parse(args)
       if (!options) {
          logger.error('Invalid input parameter(s)')
@@ -85,12 +89,12 @@ public class PDRConfigurator extends ApplicationConfigurator {
          this.repo = options.r
       }
 
-      if (options.u) {
-         this.user = options.u
+      if (options.U) {
+         this.user = options.U
       }
 
-      if (options.p) {
-         this.pass = options.p
+      if (options.P) {
+         this.pass = options.P
       }
 
       if (options.h || !result) {
@@ -101,7 +105,7 @@ public class PDRConfigurator extends ApplicationConfigurator {
       if (!options.h) {
          if (!options.n) {
             // PDR requires URS login
-            if (!options.u || !options.p) {
+            if (!options.U || !options.P) {
                Console con = System.console()
                System.out.print("Username: ")
                this.user = con.readLine()
@@ -116,6 +120,10 @@ public class PDRConfigurator extends ApplicationConfigurator {
       }
       else {
           this.configFile = System.getProperty(PROP_CONFIG_FILE)
+      }
+
+      if (options.p) {
+         this.filteredProductTypes = options.p.split(",")
       }
 
       logger.debug("return result ${result}")
@@ -143,25 +151,24 @@ public class PDRConfigurator extends ApplicationConfigurator {
       logger.debug("Done loading product type configuration")
 
       this.productTypes.values().each { ProductType pt ->
-         if (this.userStart) {
-            pt.start = userStart
-            logger.debug("set user start date: ${pt.start}")
-         }
-         if (this.userEnd) {
-            pt.end = userEnd
-            logger.debug("set user end date: ${pt.end}")
-            pt.batch = true
-         }
-         // set flag to enable the product type to harvest data
-         if (!this.userProductType || this.userProductType.equals(pt.name)) {
-            pt.ready = true
-         }
-         pt.setup()
-      }
-
-      if (logger.debugEnabled) {
-         this.productTypes.each { k, v ->
-            //logger.info("${k} -> ${v}")
+         if(this.filteredProductTypes == null || pt.name in this.filteredProductTypes) {
+            logger.debug(pt.name + " passed name filter")
+            if (this.userStart) {
+               pt.start = userStart
+               logger.debug("set user start date: ${pt.start}")
+            }
+            if (this.userEnd) {
+               pt.end = userEnd
+               logger.debug("set user end date: ${pt.end}")
+            }
+            // set flag to enable the product type to harvest data
+            if (!this.userProductType || this.userProductType.equals(pt.name)) {
+               pt.ready = true
+            }
+            pt.setup()
+            if (logger.debugEnabled) {
+               logger.info("${pt.name} -> ${pt}")
+            }
          }
       }
       return result
@@ -178,21 +185,26 @@ public class PDRConfigurator extends ApplicationConfigurator {
       logger.debug("Done re-loading product type configuration")
 
       newProductTypes.values().each { ProductType pt ->
-         if (this.userStart) {
-            pt.start = userStart
-            logger.debug("set user start date: ${pt.start}")
+         if(this.filteredProductTypes == null || pt.name in this.filteredProductTypes) {
+            logger.debug(pt.name + " passed name filter")
+            if (this.userStart) {
+               pt.start = userStart
+               logger.debug("set user start date: ${pt.start}")
+            }
+            if (this.userEnd) {
+               pt.end = userEnd
+               logger.debug("set user end date: ${pt.end}")
+            }
+            // set flag to enable the product type to harvest data
+            if (!this.userProductType || this.userProductType.equals(pt.name)) {
+               pt.ready = true
+            }
+            pt.setup()
+            pt.work()
+            if (logger.debugEnabled) {
+               logger.info("${pt.name} -> ${pt}")
+            }
          }
-         if (this.userEnd) {
-            pt.end = userEnd
-            logger.debug("set user end date: ${pt.end}")
-            pt.batch = true
-         }
-         // set flag to enable the product type to harvest data
-         if (!this.userProductType || this.userProductType.equals(pt.name)) {
-            pt.ready = true
-         }
-         pt.setup()
-         pt.work()
       }
       this.productTypes << newProductTypes
       return result

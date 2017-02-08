@@ -98,11 +98,8 @@ class SipsImageryDataCrawler extends TimerTask {
       //crawler.registerProductHandler(handler as FileProductHandler)
       crawler.registerProductSelector(new gov.nasa.horizon.common.api.file.FileFilter(expressions as String[]))
       crawler.init()
-      //if (this.productType.batch) {
-         Set<FileProduct> fps = crawler.crawl()
-      //} else {
-      //  manager.replaceCrawler(crawler)
-      //}
+	  Set<FileProduct> fps = crawler.crawl()
+
       
          if (log.traceEnabled) {
             log.trace ("Dump crawler result: ${productType}:${expressions} ->")
@@ -113,11 +110,6 @@ class SipsImageryDataCrawler extends TimerTask {
          this.handler.preprocess()
          this.handler.process(fps as List)
          this.handler.postprocess()
-         
-      //} else {
-      //if (!this.productType.batch)
-      //   manager.replaceCrawler(crawler)
-      //}
    }
 
    /**

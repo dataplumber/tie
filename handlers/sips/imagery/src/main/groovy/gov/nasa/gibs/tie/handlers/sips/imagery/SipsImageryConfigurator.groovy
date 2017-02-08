@@ -31,6 +31,7 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
    private static String PROP_SCRIPT = 'horizon.user.application'
    private String[] args
    private String configFile
+   private String[] filteredProductTypes
 
    public SipsImageryConfigurator(String[] args) {
       this.args = args
@@ -52,6 +53,8 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
       cli.e(args: 1, longOpt: 'end', argName: 'endDate', 'end date yyyy-MM-dd')
       cli.r(args: 1, longOpt: 'repo', argName: 'repo', 'local repository directory')
       cli.c(args: 1, longOpt: 'config', argName: 'config', 'tie_producttypes.xml location')
+      cli.p(args: 1, longOpt: 'productTypes', argName: 'productType', 'list of product types to process')
+
       def options = cli.parse(args)
       if (!options) {
          logger.error('Invalid input parameter(s)')
@@ -94,6 +97,10 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
          result = false
       }
 
+      if (options.p) {
+         this.filteredProductTypes = options.p.split(",")
+      }
+
       logger.debug("return result ${result}")
 
       return result
@@ -119,28 +126,22 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
       logger.debug("Done loading product type configuration")
 
       this.productTypes.values().each { ProductType pt ->
-         if (this.userStart) {
-            pt.start = userStart
-         }
-         if (this.userEnd) {
-            pt.end = userEnd
-            pt.batch = true
-         }
-         // set flag to enable the product type to harvest data
-         if (!this.userProductType || this.userProductType.equals(pt.name)) {
-            pt.ready = true
-         }
-         pt.setup()
-      }
-
-      if (logger.debugEnabled) {
-         try {
-            this.productTypes.each { k, v ->
-               //logger.info("${k} -> ${v}")
+         if (this.filteredProductTypes == null || pt.name in this.filteredProductTypes) {
+            logger.debug(pt.name + " passed name filter")
+            if (this.userStart) {
+               pt.start = userStart
             }
-         } catch (Exception e) {
-            e.printStackTrace()
-            logger.debug(e.message, e)
+            if (this.userEnd) {
+               pt.end = userEnd
+            }
+            // set flag to enable the product type to harvest data
+            if (!this.userProductType || this.userProductType.equals(pt.name)) {
+               pt.ready = true
+            }
+            pt.setup()
+            if (logger.debugEnabled) {
+               logger.info("${pt.name} -> ${pt}")
+            }
          }
       }
 
@@ -159,21 +160,26 @@ public class SipsImageryConfigurator extends ApplicationConfigurator {
       logger.debug("Done re-loading product type configuration")
 
       newProductTypes.values().each { ProductType pt ->
-         if (this.userStart) {
-            pt.start = userStart
-            logger.debug("set user start date: ${pt.start}")
+         if (this.filteredProductTypes == null || pt.name in this.filteredProductTypes) {
+            logger.debug(pt.name + " passed name filter")
+            if (this.userStart) {
+               pt.start = userStart
+               logger.debug("set user start date: ${pt.start}")
+            }
+            if (this.userEnd) {
+               pt.end = userEnd
+               logger.debug("set user end date: ${pt.end}")
+            }
+            // set flag to enable the product type to harvest data
+            if (!this.userProductType || this.userProductType.equals(pt.name)) {
+               pt.ready = true
+            }
+            pt.setup()
+            pt.work()
+            if (logger.debugEnabled) {
+               logger.info("${pt.name} -> ${pt}")
+            }
          }
-         if (this.userEnd) {
-            pt.end = userEnd
-            logger.debug("set user end date: ${pt.end}")
-            pt.batch = true
-         }
-         // set flag to enable the product type to harvest data
-         if (!this.userProductType || this.userProductType.equals(pt.name)) {
-            pt.ready = true
-         }
-         pt.setup()
-         pt.work()
       }
       this.productTypes << newProductTypes
       return result

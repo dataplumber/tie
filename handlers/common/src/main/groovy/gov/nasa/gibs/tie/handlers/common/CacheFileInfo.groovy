@@ -4,6 +4,8 @@ import groovy.xml.MarkupBuilder
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.xml.sax.SAXException
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,9 +59,11 @@ class CacheFileInfo {
     
     //new function to retrieve the last modified date for whole cache xml file
     
-   public static List<CacheFileInfo> load(String cachefile) throws IOException {
-      _logger.debug("Inside CacheFileInfo.load method, loading ${cachefile}")
-      def crawlercache
+   public static List<CacheFileInfo> load(String cachefile, int cacheRetention = 30) throws IOException {
+	  boolean deletedCacheEntry = false
+	  Set<String> pgwsToDelete = new HashSet<String>()
+	  
+	  def crawlercache
       List<CacheFileInfo> result = []
       if (!new File(cachefile).exists()) {
          return result
@@ -76,12 +80,29 @@ class CacheFileInfo {
                info.checksumAlgorithm = fileinfo.checksum.algorithm as String
                info.checksumValue = fileinfo.checksum.value as String
             }
-            result << info
+			
+			Pattern p = Pattern.compile("(\\S)*(?=\\.)")
+			Matcher m = p.matcher(info.name)
+			String baseFileName = ""
+			if(m.find()) {baseFileName = m.group(0)}
+			
+			Calendar cal = Calendar.getInstance()
+			cal.add(Calendar.DATE, -1*cacheRetention)
+			if( info.modified < cal.getTimeInMillis() || pgwsToDelete.contains(baseFileName)) {
+				deletedCacheEntry = true
+				pgwsToDelete.add(baseFileName)
+			} else {
+				result << info
+			}
          }
+		 if(deletedCacheEntry) {
+			 save(result, cachefile)
+		 }
+		 
          _logger.trace(result)
       } catch (IOException | SAXException e) {
-         _logger.error("Unable to process cache file ${cachefile}")
-         throw new IOException(e)
+         _logger.error("Unable to process cache file ${cachefile}. Handler will now terminate.", e)
+         System.exit(-1)
       }
       return result
    }

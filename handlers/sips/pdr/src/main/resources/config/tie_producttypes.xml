@@ -4,6 +4,7 @@
    <productTypes>
       <sigevent>http://localhost:8100/sigevent/</sigevent>
       <interval>10</interval>
+      <cacheRetention>30</cacheRetention>
       <maxPDRConnections>5</maxPDRConnections>
       <maxIngestConnections>10</maxIngestConnections>
       <productType>

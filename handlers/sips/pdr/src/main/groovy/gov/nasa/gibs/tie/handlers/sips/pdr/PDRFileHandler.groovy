@@ -5,6 +5,7 @@
 package gov.nasa.gibs.tie.handlers.sips.pdr
 
 import gov.nasa.gibs.tie.handlers.common.CacheFileInfo
+import gov.nasa.gibs.tie.handlers.sips.pdr.PDRErrorUtility
 import gov.nasa.horizon.common.api.file.FileProduct
 import gov.nasa.horizon.common.api.file.FileProductHandler
 import gov.nasa.horizon.common.api.util.ChecksumUtility
@@ -12,6 +13,7 @@ import gov.nasa.horizon.handlers.framework.DataHandlerException
 import gov.nasa.horizon.handlers.framework.FileHandler
 import gov.nasa.horizon.handlers.framework.Product
 import gov.nasa.horizon.sigevent.api.SigEvent
+
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
@@ -173,14 +175,23 @@ class PDRFileHandler implements FileHandler, FileProductHandler {
             cfi.checksumAlgorithm = filep.digestAlgorithm.toString()
             cfi.checksumValue = filep.digestValue
 
+			// Per requirements, register a PDR file in cache even if it doesn't validate.
             if (productType.updateCache(cfi)) {
                logger.debug("${productType.name}:${cfi.name} has been added to cache.")
-            }
+            } 
 
-            // time to process the PDR
-            PDRProcessor pp = new PDRProcessor(productType, "${destination}${File.separator}${filep.name}")
-            pp.run()
-
+			// time to process the PDR
+			PDRProcessor pp
+			try{
+				pp = new PDRProcessor(productType, "${destination}${File.separator}${filep.name}")
+			} catch(Exception e) {
+				logger.warn("Couldn't read PDR! About to skip over this file.")
+				PDRErrorUtility.writePDRDShortFile(productType, pdrProductName, PDRErrorUtility.PDRDShortDisposition.UNREADABLE)
+				//TODO create SigEvent
+				break;
+			}
+			pp.run()        
+           
             // Done with a PDR file.  Remove it from the data store.
             def f = new File("${productType.dataStorage}${File.separator}${pdrProductName}${File.separator}")
             if (f.exists()) {

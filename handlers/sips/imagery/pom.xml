@@ -18,7 +18,7 @@
    <parent>
       <groupId>gov.nasa.gibs</groupId>
       <artifactId>sips</artifactId>
-      <version>0.5.0</version>
+      <version>0.6.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
    <artifactId>sips-imagery</artifactId>
@@ -36,7 +36,7 @@
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>sips-common</artifactId>
-         <version>0.5.0</version>
+         <version>0.6.0</version>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
@@ -65,7 +65,7 @@
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>common</artifactId>
-         <version>0.5.0</version>
+         <version>0.6.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>

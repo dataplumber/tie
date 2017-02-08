@@ -9,7 +9,7 @@ import gov.nasa.horizon.handlers.framework.*
 import groovy.transform.ToString
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
-
+import org.apache.commons.lang.time.DateUtils
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -27,6 +27,7 @@ class SipsImageryProductType extends ProductTypeImpl implements Worker, Runnable
 
    final String name
    int interval = 0
+   int cacheRetention
    String sigEventURL
    String sourceURL
    List<String> filesetFilter = []
@@ -86,6 +87,15 @@ class SipsImageryProductType extends ProductTypeImpl implements Worker, Runnable
       if (!this.endDate) {
          this.endDate = new Date()
       }
+	  
+	  Date lastCachePurge
+	  //Ensure cache is purged of old entries at least once per day
+	  Date now = new Date()
+	  if( this.cache && ( lastCachePurge == null || lastCachePurge < DateUtils.addDays(now, -1)) ) {
+		  lastCachePurge = now
+		  _logger.trace("Purging expired cache entries from ${workspace.getLocation(Workspace.Location.CACHE)}${File.separator}${name}.cache.xml")
+		  this.cache = CacheFileInfo.load("${workspace.getLocation(Workspace.Location.CACHE)}${File.separator}${name}.cache.xml", cacheRetention)
+	  }
 
       try {
           // do the work
@@ -98,10 +108,10 @@ class SipsImageryProductType extends ProductTypeImpl implements Worker, Runnable
           mdc.run()
           _logger.debug ("done crawling")
           mdc.shutdown()
-          if (!batch) {
-             this.startDate = new Date()
-             this.endDate = null
-          }
+
+         this.startDate = new Date()
+         this.endDate = null
+          
           if (new File("/tmp/sips_imagery_shutdown").exists()) {
               this.pool.shutdown()
           }
@@ -143,13 +153,7 @@ class SipsImageryProductType extends ProductTypeImpl implements Worker, Runnable
    @Override
    void work() throws DataHandlerException {
       _logger.debug("Product Type ${this.name} scheduled every ${this.interval} sec")
-      if (!this.batch)
-         this.pool.scheduleWithFixedDelay(this, 0, this.interval, TimeUnit.SECONDS)
-      else
-         this.run()
-      //this.run()
-      //_logger.debug("Product Type ${this.name} scheduled every ${this.interval} sec")
-      //this.pool.scheduleWithFixedDelay(this, 0, this.interval, TimeUnit.SECONDS)
+      this.pool.scheduleWithFixedDelay(this, 0, this.interval, TimeUnit.SECONDS)
 
    }
 

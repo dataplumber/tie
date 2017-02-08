@@ -23,7 +23,6 @@ public class PDRHandler implements Worker {
 
    PDRConfigurator config
    boolean error = false
-   boolean batch = false
 
    /**
     * Constructor to process user commandline input and initialize the
@@ -87,8 +86,6 @@ public class PDRHandler implements Worker {
       }
 
       this.config.productTypes.each { name, pt ->
-         if (pt.batch) this.batch = true
-
          if (pt.ready) {
             pt.work()
          }
@@ -116,23 +113,21 @@ public class PDRHandler implements Worker {
       File shutdown = new File("/tmp/sips_pdr_shutdown")
       logger.debug("handler.hasError() = ${handler.hasError()}")
       if (!handler.hasError()) {
-         if (!handler.batch) {
-            while (true) {
-               try {
-                  Thread.sleep(10000);
-               } catch (InterruptedException e) {
-                  e.printStackTrace();
-               }
+        while (true) {
+           try {
+              Thread.sleep(10000);
+           } catch (InterruptedException e) {
+              e.printStackTrace();
+           }
 
-               //Reload config file for new product type entries
-               //handler.config.reloadConfig()
+           //Reload config file for new product type entries
+           //handler.config.reloadConfig()
 
-               // checking for shutdown file
-               if (shutdown.exists()) {
-                  break
-               }
-            }
-         }
+           // checking for shutdown file
+           if (shutdown.exists()) {
+              break
+           }
+        }
       }
 
       logger.info("PDR Handler shutting down...")
