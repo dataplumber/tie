@@ -6,7 +6,7 @@
    <parent>
       <groupId>gov.nasa.gibs</groupId>
       <artifactId>generate</artifactId>
-      <version>0.5.0</version>
+      <version>0.6.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -24,7 +24,7 @@
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>generate-api</artifactId>
-         <version>0.5.0</version>
+         <version>0.6.0</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -95,12 +95,12 @@
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-api</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>sigevent-api</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
       </dependency>
       <dependency>
          <groupId>commons-codec</groupId>

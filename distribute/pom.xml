@@ -21,7 +21,7 @@
 
    <groupId>gov.nasa.gibs</groupId>
    <artifactId>distribute</artifactId>
-   <version>0.5.0</version>
+   <version>0.6.0</version>
    <packaging>pom</packaging>
 
    <name>Distribute Program Set</name>

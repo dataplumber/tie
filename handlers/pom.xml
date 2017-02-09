@@ -34,13 +34,11 @@
 
    <modules>
       <module>common</module>
-<!--
       <module>airs</module>
       <module>mls</module>
       <module>modaps</module>
       <module>modis</module>
       <module>omi</module>
--->
       <module>sips</module>
       <module>wms</module>
       <module>sftp</module>

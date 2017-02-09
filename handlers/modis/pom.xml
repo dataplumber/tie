@@ -18,7 +18,7 @@
    <parent>
       <groupId>gov.nasa.gibs</groupId>
       <artifactId>handlers</artifactId>
-      <version>0.5.0</version>
+      <version>0.6.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
    <artifactId>modis</artifactId>
@@ -36,42 +36,42 @@
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-api</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-crawlercache</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>ingest-api</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>common-httpfetch</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>handlers-framework</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.gibs</groupId>
          <artifactId>common</artifactId>
-         <version>0.5.0</version>
+         <version>0.6.0</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
          <groupId>gov.nasa.horizon</groupId>
          <artifactId>sigevent-api</artifactId>
-         <version>5.1.0</version>
+         <version>5.2.0</version>
       </dependency>
       <dependency>
          <groupId>org.codehaus.groovy</groupId>

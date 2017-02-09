@@ -21,7 +21,7 @@
       <version>0.0.0</version>
    </parent>
    <artifactId>middleware</artifactId>
-   <version>0.5.0</version>
+   <version>0.6.0</version>
    <packaging>pom</packaging>
    <name>Middleware Program Set</name>
    <description>The Middleware program set </description>
