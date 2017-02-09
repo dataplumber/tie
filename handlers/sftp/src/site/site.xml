@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+Copyright 2013, by the California Institute of Technology.
+ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+
+$Id: $
+-->
+
+<project xmlns="http://maven.apache.org/DECORATION/1.4.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd"
+   name="SFTP Imagery Handler Module">
+
+   <bannerLeft>
+      <src>images/gibs_logo.jpg</src>
+      <href>https://horizon.jpl.nasa.gov/</href>
+   </bannerLeft>
+
+   <bannerRight>
+      <name>SFTP Data Handlers Program Set</name>
+   </bannerRight>
+
+   <body>
+      <links>
+         <item name="SFTP" href="http://horizon.jpl.nasa.gov/tie/handlers/sftp/index.html"/>
+      </links>
+      <menu name="Software Documentation">
+         <item name="About SFTP" href="index.html"/>
+         <item name="Installation" href="install/index.html"/>
+         <item name="Operation" href="operate/index.html"/>
+      </menu>
+
+      <menu ref="reports"/>
+   </body>
+</project>
