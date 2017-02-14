@@ -230,6 +230,94 @@ class ProductTypeController {
          }
       }
    }
+
+   def listProductsByDataDay = {
+      def productPageSize = grailsApplication.config.pagination.PRODUCT_PAGE_SIZE;
+      def pt = inventoryService.selectProductType(params);
+      if(pt==null){
+         log.warn("404, No Product Type found with with params: "+params)
+         response.status = 404 //Not Found
+         render "Product Type: Name or ID not found."
+         return
+      }
+      def start = null;
+      def stop = null;
+      def pattern = (params.pattern) ? params.pattern : "%"
+      pattern = pattern.replaceAll("#", "%")
+      def onlineOnly = false
+      if(params.onlineOnly)
+         onlineOnly = params.onlineOnly as Boolean
+
+      def productList = null
+      def productCount = null
+      def dataDayList = null
+
+      log.debug("pattern: $pattern");
+      def page = null;
+      if(params.page==null)
+         page = 1;
+      else{
+         try{
+            page = Integer.valueOf(params.page)
+         }catch(Exception e){
+            log.debug("Exception parsing page number: ${e.getMessage()}. Setting page=1")
+            page=1;
+         }
+      }
+
+      if(params.startTime != null || params.stopTime != null) {
+         if(params.startTime != null){
+            log.debug("ValueOf [params.startTime]:"+params.startTime);
+            start = Long.valueOf(params.startTime)
+         }
+         else {
+            start = 0;
+         }
+         if(params.stopTime != null){
+            log.debug("ValueOf [params.stopTime]:"+params.stopTime);
+            stop = Long.valueOf(params.stopTime)
+         }
+         else {
+            stop = new Date().getTime();
+         }
+
+         if(onlineOnly == false) {
+            dataDayList = ProductDataDay.findAllByDataDayBetween(start, stop, [max:productPageSize, offset:productPageSize * (page-1), sort:"dataDay", order:"desc"]);
+            productList = dataDayList.collect {it.product}
+            productList = productList.unique()
+            productCount = productList.size
+         }
+         else {
+            def status = "ONLINE"
+            dataDayList = ProductDataDay.findAllByDataDayBetween(start, stop, [max:productPageSize, offset:productPageSize * (page-1), sort:"dataDay", order:"desc"]);
+            productList = dataDayList.findResults {(it.status == status) ? it : null}
+            productCount = productList.size
+         }
+      }
+      else {
+         log.warn("404, No startTime and stopTime params found: "+params)
+         response.status = 404 //Not Found
+         render "Please specify startTime and stopTime parameters"
+         return
+      }
+
+      render(contentType:"text/xml"){
+         "response"(page:"$page",numPages: Math.ceil(productCount/productPageSize) as Integer){
+            productList.each {productObj ->
+               "product" {
+                  "id"(productObj.id)
+                  "archiveTime"(productObj.archiveTime as Long)
+                  "startTime"(productObj.startTime as Long)
+                  "stopTime"(productObj.stopTime as Long)
+                  //productObj.dataDay.each { dd ->
+                  //   "dataDay"(dd.dataDay)
+                  //}
+                  "name"(productObj.name as String)
+               }
+            }
+         }
+      }
+   }
    
    def listProducts = {
       def productPageSize = grailsApplication.config.pagination.PRODUCT_PAGE_SIZE;

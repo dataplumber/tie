@@ -130,7 +130,7 @@ public class MrfScript {
          List<Source> sourceList = null;
          List<Product> productList = null;
          try {
-            productList = q.getProductIdListAll(productTypeName, startTime, stopTimeQuery, null, true);
+            productList = q.getProductsByDataDay(productTypeName, startTime, stopTimeQuery, true);
             imageList = q.getImageList(productTypeName, startTime, stopTimeQuery);
             log.debug("Ran getImageList with start time "+startTime.toString()+" and stop time "+stopTimeQuery.toString());
             //log.debug(imageList);

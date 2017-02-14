@@ -43,13 +43,14 @@ public class SFTPConfigurator extends ApplicationConfigurator {
                 usage: "${System.getProperty(PROP_SCRIPT)} [options]",
                 header: 'options:')
         cli.h(longOpt: 'help', 'print this message')
-        cli.t(args: 1, longOpt: 'productTypes', argName: 'productTypes', 'comma-separated list of product types to process')
+        cli.t(args: 1, longOpt: 'productType', argName: 'productType', 'target product type')
         cli.s(args: 1, longOpt: 'start', argName: 'startDate', 'start date yyyy-MM-dd')
         cli.e(args: 1, longOpt: 'end', argName: 'endDate', 'end date yyyy-MM-dd')
         cli.r(args: 1, longOpt: 'repo', argName: 'repo', 'local repository directory')
-        cli.u(args: 1, longOpt: 'user', argName: 'user', 'URS user name')
-        cli.p(args: 1, longOpt: 'pass', argName: 'pass', 'URS password')
+        cli.U(args: 1, longOpt: 'user', argName: 'user', 'URS user name')
+        cli.P(args: 1, longOpt: 'pass', argName: 'pass', 'URS password')
         cli.n(longOpt: 'non-interactive', argName: 'non-interactive', 'Run in non-interactive mode')
+        cli.p(args: 1, longOpt: 'productTypes', argName: 'productType', 'list of product types to process')
 
         def options = cli.parse(args)
         if (!options) {
@@ -57,10 +58,10 @@ public class SFTPConfigurator extends ApplicationConfigurator {
             result = false
         }
 
-		if (options.t) {
-			this.filteredProductTypes = options.t.split(",")
-		}
-		
+        if (options.t) {
+            this.userProductType = options.t
+        }
+
         if (options.s) {
             this.userStart = _parseDate(options.s)
             if (!userStart) {
@@ -81,12 +82,12 @@ public class SFTPConfigurator extends ApplicationConfigurator {
             this.repo = options.r
         }
 
-        if (options.u) {
-            this.user = options.u
+        if (options.U) {
+            this.user = options.U
         }
 
-        if (options.p) {
-            this.pass = options.p
+        if (options.P) {
+            this.pass = options.P
         }
 
         if (options.h || !result) {
@@ -97,7 +98,7 @@ public class SFTPConfigurator extends ApplicationConfigurator {
 
         if (!options.h) {
             if (!options.n) {
-                // SFTP requires URS login
+                // gov.nasa.gibs.tie.handlers.sftp.SFTP requires URS login
                 if (!options.u || !options.p) {
                     Console con = System.console()
                     System.out.print("URS Username: ")
@@ -106,6 +107,10 @@ public class SFTPConfigurator extends ApplicationConfigurator {
                     this.pass = new String(con.readPassword())
                 }
             }
+        }
+
+        if (options.p) {
+            this.filteredProductTypes = options.p.split(",")
         }
 
         logger.debug("return result ${result}")
@@ -144,8 +149,10 @@ public class SFTPConfigurator extends ApplicationConfigurator {
                     logger.debug("set user end date: ${pt.end}")
                     pt.batch = true
                 }
-                pt.ready = true // set flag to enable the product type to harvest data
-                
+                // set flag to enable the product type to harvest data
+                if (!this.userProductType || this.userProductType.equals(pt.name)) {
+                    pt.ready = true
+                }
                 pt.setup()
                 if (logger.debugEnabled) {
                     logger.info("${pt.name} -> ${pt}")

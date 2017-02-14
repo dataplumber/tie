@@ -43,11 +43,12 @@ public class WMSConfigurator extends ApplicationConfigurator {
 				usage: "${System.getProperty(PROP_SCRIPT)} [options]",
 				header: 'options:')
 		cli.h(longOpt: 'help', 'print this message')
-		cli.t(args: 1, longOpt: 'productTypes', argName: 'productTypes', 'comma-separated list of product types to process')
+		cli.t(args: 1, longOpt: 'productType', argName: 'productType', 'target product type')
 		cli.s(args: 1, longOpt: 'start', argName: 'startDate', 'start date yyyy-MM-dd')
 		cli.e(args: 1, longOpt: 'end', argName: 'endDate', 'end date yyyy-MM-dd')
 		cli.r(args: 1, longOpt: 'repo', argName: 'repo', 'local repository directory')
 		cli.q(args: 1, longOpt: 'queryType', argName: 'queryType', 'revision or acquisition (default)')
+        cli.p(args: 1, longOpt: 'productTypes', argName: 'productType', 'list of product types to process')
 
         def options = cli.parse(args)
 		if (!options) {
@@ -56,7 +57,7 @@ public class WMSConfigurator extends ApplicationConfigurator {
 		}
 
 		if (options.t) {
-			this.filteredProductTypes = options.t.split(",")
+			this.userProductType = options.t
 		}
 
 		if (options.s) {
@@ -90,6 +91,10 @@ public class WMSConfigurator extends ApplicationConfigurator {
 				logger.error("Invalid queryType value: ${options.q}")
 				result = false
 			}
+		}
+
+		if (options.p) {
+			this.filteredProductTypes = options.p.split(",")
 		}
 
 		logger.debug("return result ${result}")
@@ -131,8 +136,10 @@ public class WMSConfigurator extends ApplicationConfigurator {
 					pt.queryType = userQueryType
 				}
 
-				pt.ready = true // set flag to enable the product type to harvest data
-				
+				// set flag to enable the product type to harvest data
+				if (!this.userProductType || this.userProductType.equals(pt.name)) {
+					pt.ready = true
+				}
 				pt.setup()
                 if (logger.debugEnabled) {
                     logger.info("${pt.name} -> ${pt}")

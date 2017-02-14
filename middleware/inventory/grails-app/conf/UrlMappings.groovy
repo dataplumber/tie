@@ -31,8 +31,10 @@ class UrlMappings {
         "/productTypeByName/$name"(controller:"productType"){action=[GET:"show", POST:"show"]}
         "/productType/$id/listProducts"(controller:"productType"){action=[GET:"listProducts", POST:"listProducts"]}
         "/productType/$id/listProductsByArchiveTime"(controller:"productType"){action=[GET:"listProductsByArchiveTime", POST:"listProductsByArchiveTime"]}
+        "/productType/$id/listProductsByDataDay"(controller:"productType"){action=[GET:"listProductsByDataDay", POST:"listProductsByDataDay"]}
         "/productTypeByName/$name/listProducts"(controller:"productType"){action=[GET:"listProducts", POST:"listProducts"]}
         "/productTypeByName/$name/listProductsByArchiveTime"(controller:"productType"){action=[GET:"listProductsByArchiveTime", POST:"listProductsByArchiveTime"]}
+        "/productTypeByName/$name/listProductsByDataDay"(controller:"productType"){action=[GET:"listProductsByDataDay", POST:"listProductsByDataDay"]}
         "/productType/$id/latestProduct"(controller:"productType"){action=[GET:"showLatestProduct", POST:"showLatestProduct"]}
         "/productTypeByName/$name/latestProduct"(controller:"productType"){action=[GET:"showLatestProduct", POST:"showLatestProduct"]}
         "/productType/$id/policy"(controller:"productType"){action=[GET:"showPolicy", POST:"showPolicy"]}
